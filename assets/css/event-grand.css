@@ -1,0 +1,601 @@
+/* ============================================================================
+   1919—1949 · 有些历史不该忘
+   event-grand.css —— 开国大典氛围特制页
+   ---------------------------------------------------------------------------
+   与其他事件页刻意不同：本页不做史实卡的分条陈述，而做「一次仪式」。
+   结构（2026-09-21 改版后）：
+     满版油画《开国大典》铺底 → 那句宣告逐字浮现（同步历史录音）→ 落款 → 控制条
+   原「自绘天安门 SVG + 五星红旗升起动画」已按波哥要求移除 ——
+   油画本身已经把"在哪、谁在说话、下面是什么"交代完了，
+   再用自绘建筑重建一遍场景是多余的一层。
+   文字极简，靠画面与声音把气氛推到顶。
+   ========================================================================= */
+
+/* ============================================================================
+   壹 · 全屏油画场景
+   ========================================================================= */
+
+.grand-stage {
+  position: relative;
+  /* 减去站点头部（sticky，58px + 1px 边框），否则首屏会被顶掉 59px：
+     844×390 横屏实测舞台整体下移 59px，内容层底部落到折线以下。
+     min-height 用 svh 而非 vh，避开移动端地址栏伸缩时的跳动。 */
+  --site-nav-h: 59px;
+  min-height: calc(100vh - var(--site-nav-h));
+  min-height: calc(100svh - var(--site-nav-h));
+  margin: 0;
+  overflow: hidden;
+  /* 底色＝油画里城楼暗部的棕，避免图片加载完成前闪白 */
+  background: #2A1409;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  color: #F5EDD9;
+}
+
+/* ---- 满版油画：cover 铺满，底部对齐 ----
+   油画的视觉重心在上面（天空、宫灯、城楼），
+   人中轴偏左，所以 object-position 取"偏下略偏左"，
+   让"天安门华表 + 广场人群"这条水平线留在画面下三分之一。 */
+.grand-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.grand-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  /* 略微降饱和 + 收一点点对比，让油画的蓝绿天空不跳出来跟前景文字抢色 */
+  filter: saturate(0.94) contrast(1.02);
+  /* 满版画面后置：入场时先暗，再随宣告渐显（.is-lit 触发），
+     与旧版"红旗升起"承担同一个叙事功能 —— 画面先于文字交代场景 */
+  opacity: 0.001;
+  transform: scale(1.035);
+  transition: opacity 1.5s cubic-bezier(.22,.61,.36,1),
+              transform 2.4s cubic-bezier(.22,.61,.36,1);
+}
+/* 渐显到位后油画缓慢落到 1.0 —— 一次极轻的"推近收束"，
+   不做持续动效，避免与打字争夺注意力 */
+.grand-stage.is-lit .grand-bg img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---- 暗压层：让那句宣告在任何底色上都读得清 ----
+   三段叠加：
+     ① 底部 62% 的纵向暗压 —— 承载内容层的区域
+     ② 顶部 34% 的轻压   —— 压住天空亮部，收拢视线
+     ③ 中轴椭圆光晕      —— 给"那句话"托一层局部暗场，但不切边（无硬边矩形感） */
+.grand-bg-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 62% 34% at 50% 74%,
+      rgba(12, 6, 4, 0.74) 0%, rgba(12, 6, 4, 0.5) 46%, rgba(12, 6, 4, 0) 80%),
+    linear-gradient(180deg,
+      rgba(10, 5, 3, 0.42) 0%,
+      rgba(10, 5, 3, 0.14) 26%,
+      rgba(10, 5, 3, 0.3) 52%,
+      rgba(10, 5, 3, 0.72) 82%,
+      rgba(10, 5, 3, 0.88) 100%);
+}
+
+/* ---- 天空层：改版后只作极薄的暖调罩染，不再是主背景 ---- */
+.grand-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  background:
+    linear-gradient(180deg,
+      rgba(255, 176, 96, 0.5) 0%,
+      rgba(214, 38, 23, 0.34) 42%,
+      rgba(120, 40, 12, 0.2) 100%);
+}
+
+/* ---- 云层：油画里已有云，这层降到近乎不可见，只保留缓慢横移的"时间感" ---- */
+.grand-clouds {
+  position: absolute;
+  inset: -8% -20%;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: soft-light;
+  background-image:
+    radial-gradient(ellipse 34% 12% at 18% 22%, rgba(255, 214, 170, 0.55) 0%, transparent 62%),
+    radial-gradient(ellipse 28% 9% at 62% 15%, rgba(255, 190, 140, 0.42) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 11% at 84% 30%, rgba(255, 205, 160, 0.38) 0%, transparent 64%),
+    radial-gradient(ellipse 30% 10% at 36% 36%, rgba(255, 175, 125, 0.3) 0%, transparent 60%);
+  animation: cloudDrift 78s linear infinite alternate;
+}
+@keyframes cloudDrift {
+  from { transform: translateX(-3.5%); }
+  to   { transform: translateX(3.5%); }
+}
+
+/* ============================================================================
+   贰 · 场景内的内容层（那句话 / 落款 / 控制）
+   ---------------------------------------------------------------------------
+   布局基准说明（踩过坑，改前必读）：
+     .grand-stage 是 column + justify-content: flex-end，
+     .grand-content 是普通流中的最后一项，**它的高度会撑开舞台**。
+     所以 .grand-content 的 padding-bottom 是"舞台内的底部留白"，
+     而 .grand-scroll-hint 是 absolute + bottom 定位，二者不在同一坐标系里。
+     → 滚动提示若要避开控制条，必须让 bottom 落在 [安全下沿, 舞台底] 之间，
+       一旦 bottom ≥ 安全下沿就会与控制条同高叠字（实测叠 33px）。
+   ========================================================================= */
+
+/* 内容层底部留白 = 控制条下方到舞台底的距离；滚动提示落在此区间内 */
+.grand-stage {
+  --grand-pad-bottom: clamp(2rem, 7vh, 4rem);
+  --grand-pad-bottom-sm: 2.6rem;
+}
+
+.grand-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 980px;
+  padding: 0 clamp(1.25rem, 5vw, 3rem) var(--grand-pad-bottom);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3.5vh, 2.25rem);
+  text-align: center;
+}
+
+/* ---- 那句话 ---- */
+.grand-voice {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  /* 22 字 × 1.1em(含字距) ≈ 24.2em；容器可用约 932px，
+     字号上限必须 ≤ 2.3rem 才能让整句一行读完，否则会被迫折行 */
+  font-size: clamp(1.3rem, 4.6vw, 2.3rem);
+  line-height: 1.55;
+  letter-spacing: 0.1em;
+  color: #FFF3E0;
+  /* 双层投影：近程硬影负责把字从花哨的油画底上"切"出来，
+     远程暖光负责把字点亮——单靠辉光在亮底上读不清 */
+  text-shadow:
+    0 2px 6px rgba(28, 8, 2, 0.92),
+    0 4px 20px rgba(24, 6, 2, 0.8),
+    0 0 34px rgba(255, 176, 96, 0.24);
+  margin: 0;
+  min-height: 1.6em;
+  /* 宣告是一整句：优先不断行；必须断时也不许把词拆开 */
+  text-wrap: pretty;
+}
+
+/* 打字时是往这个 span 里逐字追加，把断行规则钉在它身上最可靠：
+   keep-all 禁止 CJK 在"词内"断开（否则会出现「中央人／民政府」）；
+   配合 text-wrap: pretty，浏览器会主动避免行尾只掉一个字。
+   屏幕足够宽时整句一行读完，窄屏才折成两行。 */
+#grand-voice-text {
+  display: inline;
+  word-break: keep-all;
+  line-break: strict;
+  text-wrap: pretty;
+  white-space: normal;
+}
+
+/* 宣告文字的衬底：在油画这一层彩色背景上"托"出一块暗场，
+   让每个字都落在低对比区，油画的天空与红旗不再与文字抢读。
+   用椭圆渐变而非纯色块 —— 避免在画面上出现一圈生硬的矩形边。 */
+.grand-voice::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + clamp(2.5rem, 9vw, 7rem));
+  height: calc(100% + clamp(1.6rem, 4vh, 2.6rem));
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 3px;
+  background: radial-gradient(ellipse 58% 62% at 50% 50%,
+    rgba(10, 5, 3, 0.86) 0%,
+    rgba(10, 5, 3, 0.62) 52%,
+    rgba(10, 5, 3, 0) 84%);
+}
+.grand-voice .voice-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.92em;
+  background: #FFD166;
+  vertical-align: -0.1em;
+  margin-left: 4px;
+  animation: caretBlink 1.05s step-end infinite;
+}
+.grand-voice .voice-caret.is-hidden { display: none; }
+
+/* 宣告读完后的定格确认帧：文字全亮停住，不再有光标闪动 */
+#grand-voice-text.is-locked {
+  color: #FFF8EC;
+}
+.grand-voice:has(#grand-voice-text.is-locked) {
+  text-shadow:
+    0 2px 6px rgba(28, 8, 2, 0.92),
+    0 4px 22px rgba(24, 6, 2, 0.84),
+    0 0 46px rgba(255, 176, 96, 0.44);
+}
+
+/* ---- 原声出处与重听 ---- */
+.grand-voice-src {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0.35rem 0 0;
+}
+.grand-voice-src__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: #FFD166;
+  border: 1px solid rgba(255, 209, 102, 0.44);
+  background: rgba(255, 209, 102, 0.1);
+  border-radius: 2px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.grand-voice-src__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #FFF3E0;
+  background: rgba(214, 38, 23, 0.3);
+  border: 1px solid rgba(255, 209, 102, 0.5);
+  border-radius: 2px;
+  padding: 9px 18px;
+  min-height: 40px;
+  cursor: pointer;
+  transition: border-color .25s, background-color .25s, transform .18s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.grand-voice-src__btn:hover {
+  border-color: #FFD166;
+  background: rgba(214, 38, 23, 0.48);
+}
+.grand-voice-src__btn:active { transform: scale(0.975); }
+.grand-voice-src__btn .ico {
+  width: 0; height: 0;
+  border-left: 8px solid #FFD166;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  flex: none;
+}
+.grand-voice-src__note {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 236, 214, 0.62);
+}
+
+/* 日期落款 */
+.grand-dateline {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 2vw, 13px);
+  letter-spacing: 0.34em;
+  color: rgba(255, 236, 214, 0.78);
+  margin: 0;
+  opacity: 0;
+  transition: opacity 1s ease .4s;
+}
+.grand-dateline.is-shown { opacity: 1; }
+
+/* ---- 控制条 ---- */
+.grand-controls {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.9rem;
+}
+
+.grand-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  color: rgba(255, 243, 224, 0.9);
+  background: rgba(16, 11, 9, 0.44);
+  border: 1px solid rgba(255, 243, 224, 0.3);
+  border-radius: 2px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: border-color .25s, background-color .25s, color .25s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.grand-btn:hover {
+  border-color: #FFD166;
+  color: #FFF3E0;
+  background: rgba(214, 38, 23, 0.24);
+}
+.grand-btn .ico {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #FFD166;
+  flex: none;
+}
+.grand-btn[aria-pressed="false"] .ico { background: rgba(255, 243, 224, 0.34); }
+
+/* 提示文字（首屏滚动提示） */
+.grand-scroll-hint {
+  position: absolute;
+  /* 净空推导（改前必算，别靠试）：
+       desktop: pad 4rem(64) − hint 1.05rem(17) − hint 自身高 33 = 净空 14px
+       ≤860px : pad 2.6rem(42) − hint 0.85rem(14) − hint 自身高 24 = 净空 4px
+       实测 640 档 hint 高 32px，故 640 档单独把 bottom 压到 0.6rem。
+     z-index 11 高于内容层，一旦重叠就是"提示压按钮"的可见事故。 */
+  bottom: clamp(0.7rem, 2.4vh, 1.05rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 243, 224, 0.72);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  transition: opacity .6s;
+}
+.grand-scroll-hint .chev {
+  display: block;
+  width: 8px; height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  animation: chevDrop 1.9s ease-in-out infinite;
+}
+@keyframes chevDrop {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; }
+  50%      { transform: rotate(45deg) translate(3px, 3px); opacity: 1; }
+}
+.grand-scroll-hint.is-hidden { opacity: 0; }
+
+/* ============================================================================
+   叁 · 场景之后的史实（极简，只留必要骨架）
+   ========================================================================= */
+
+.grand-facts {
+  background: var(--paper);
+  padding: 3.5rem var(--shell-pad) 4rem;
+}
+.grand-facts__inner {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+}
+
+/* 一个横向的流程条：9.21 → 9.30 → 10.1 下午2时 → 10.1 下午3时 */
+.grand-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 1.75rem 0 2.75rem;
+}
+.grand-flow .flow-cell {
+  background: var(--paper-soft);
+  padding: 1.25rem 1.3rem 1.4rem;
+  min-width: 0;
+}
+.grand-flow .flow-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 0.55rem;
+}
+.grand-flow .flow-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* 检阅 / 游行 两块 */
+.grand-two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+/* 城楼上的两张特写（场面对照：一张竖构图、一张横构图） */
+.grand-duo {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 1.25rem;
+  align-items: start;
+  margin-top: 2.25rem;
+}
+.grand-duo .hist-fig { margin: 0; }
+
+/* ============================================================================
+   肆 · 移动端收敛
+   ---------------------------------------------------------------------------
+   小屏的核心问题：油画 cover 后在竖屏上被裁得很窄，
+   竖向视野只剩画面中段，"那句话"容易压到人物脸上。
+   对策：
+     1. object-position 上移到 34%，保留"宫灯 + 天空"这条亮部在上方；
+     2. 内容层为底部对齐，压紧纵向间距，为宣告文字让出空间；
+     3. 暗压层加重，保证文字在窄屏上依然读得清。
+   ========================================================================= */
+
+@media (max-width: 860px) {
+  .grand-bg img { object-position: center 38%; }
+
+  .grand-stage { --grand-pad-bottom: var(--grand-pad-bottom-sm); }
+
+  .grand-bg-scrim {
+    background:
+      radial-gradient(ellipse 76% 30% at 50% 76%,
+        rgba(12, 6, 4, 0.78) 0%, rgba(12, 6, 4, 0.54) 48%, rgba(12, 6, 4, 0) 82%),
+      linear-gradient(180deg,
+        rgba(10, 5, 3, 0.34) 0%,
+        rgba(10, 5, 3, 0.1) 22%,
+        rgba(10, 5, 3, 0.34) 48%,
+        rgba(10, 5, 3, 0.78) 80%,
+        rgba(10, 5, 3, 0.92) 100%);
+  }
+
+  .grand-content {
+    padding-bottom: var(--grand-pad-bottom);
+    gap: clamp(0.85rem, 2.2vh, 1.4rem);
+  }
+
+  .grand-voice {
+    font-size: clamp(1.15rem, 5.6vw, 1.7rem);
+    line-height: 1.5;
+  }
+
+  .grand-dateline { letter-spacing: 0.22em; }
+  .grand-controls { margin-top: 1.2rem; }
+
+  .grand-scroll-hint { font-size: 9.5px; letter-spacing: 0.14em; bottom: 0.85rem; }
+}
+
+@media (max-width: 640px) {
+  .grand-bg img { object-position: center 32%; }
+
+  .grand-stage { --grand-pad-bottom-sm: 3rem; }
+
+  .grand-content { gap: 0.8rem; }
+
+  .grand-voice {
+    letter-spacing: 0.04em;
+    font-size: clamp(1.05rem, 6vw, 1.45rem);
+    text-shadow:
+      0 2px 6px rgba(28, 8, 2, 0.94),
+      0 4px 20px rgba(24, 6, 2, 0.86),
+      0 0 46px rgba(255, 176, 96, 0.3);
+  }
+
+  .grand-btn {
+    padding: 9px 14px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  /* 窄屏提示文字折成 2 行 → 自身高到 32px，bottom 必须再压 */
+  .grand-scroll-hint { bottom: 0.6rem; }
+}
+
+/* ----------------------------------------------------------------------------
+   矮视口（横屏手机 / 笔记本小窗）
+   ---------------------------------------------------------------------------
+   问题：那一句宣告在 390px 高的视口里，光自身就占到 68vh；
+   若照搬竖屏排版（大字号 + 落款 + 出处 + 控制条各占一行），
+   内容层必然高出舞台，"那句话"被顶出首屏 —— 物理尺寸问题，调间距解决不了。
+
+   对策：矮视口下首屏切成"紧凑两行"——
+     ① 字号改随视口高缩放（4.2vh，横屏 390px 高时约 32px）；
+     ② 落款 + 出处 + 重听按钮合并进一条行内横带（省掉约 2 行高度）；
+     ③ 滚动提示移到右下角、只留箭头，与控制条彻底错开。
+   断点取 max-height 800px：1024×768 笔记本屏也在内（768 = 768，含等号）。
+   ---------------------------------------------------------------------------- */
+@media (max-height: 800px) and (min-width: 641px),
+       (max-height: 720px) and (orientation: landscape),
+       (max-height: 560px) {
+  .grand-stage { --grand-pad-bottom: 0.9rem; }
+
+  .grand-content {
+    gap: 0.65rem;
+    max-width: 1120px;
+    padding-bottom: var(--grand-pad-bottom);
+  }
+
+  .grand-voice {
+    /* 矮视口下字号改随"视口高"缩放：横屏 390px 高时约 32px，
+       整句宽约 21em ≈ 670px，844px 宽的单行仍有余量 */
+    font-size: clamp(1.1rem, 4.2vh, 2rem);
+    line-height: 1.35;
+    letter-spacing: 0.06em;
+    /* 矮屏上留白是奢侈：去掉为折行预留的空行高 */
+    min-height: 0;
+  }
+
+  /* 落款 · 出处 · 重听 —— 并成一条行内横带，省掉约 2 行高度 */
+  .grand-voice-src {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .grand-voice-src__note { display: none; }
+  .grand-voice-src__label {
+    font-size: 10px;
+    padding: 3px 8px;
+    letter-spacing: 0.14em;
+  }
+  .grand-voice-src__btn {
+    font-size: 12px;
+    padding: 7px 13px;
+    min-height: 34px;
+  }
+
+  .grand-dateline {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 0.26em;
+  }
+
+  .grand-controls { margin-top: 0.4rem; gap: 0.5rem; }
+  .grand-btn { padding: 7px 13px; font-size: 11px; letter-spacing: 0.1em; }
+
+  /* 滚动提示 → 右下角，只留箭头，避开居中的控制条 */
+  .grand-scroll-hint {
+    left: auto;
+    right: 1rem;
+    bottom: 0.7rem;
+    transform: none;
+    flex-direction: row;
+    gap: 0.45rem;
+  }
+  .grand-scroll-hint span:first-child { display: none; }
+}
+
+/* 极矮屏兜底 */
+@media (max-height: 460px) {
+  .grand-voice-src__label { display: none; }
+  .grand-voice { font-size: clamp(1rem, 4.4vh, 1.6rem); }
+}
+
+/* 降低动态偏好：关闭所有持续性动画 */
+@media (prefers-reduced-motion: reduce) {
+  .grand-clouds,
+  .grand-scroll-hint .chev { animation: none !important; }
+  /* 画面直出，不做渐显推近 —— 但必须保证可见（不能停在 opacity:0.001） */
+  .grand-bg img {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

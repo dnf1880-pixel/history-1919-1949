@@ -1,0 +1,455 @@
+/* ============================================================================
+   1919—1949 · 有些历史不该忘
+   flipbook.css —— 「事件经过」翻书动效
+   ---------------------------------------------------------------------------
+   结构：
+     .flipbook__head    标题 + 页码
+     .flipbook__book    书页（左图右文），带 3D 翻页动画
+     .flipbook__tabs    页签条（可直接跳页）
+     .flipbook__nav     上一页 / 下一页
+
+   桌面：左图右文（模板样板版式）
+   移动：上下堆叠，字号与触控靶自适应
+   ========================================================================= */
+
+.flipbook {
+  margin-top: 0.5rem;
+}
+
+/* ---- 头部 ---- */
+.flipbook__prompt {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin: 0 0 1.15rem;
+}
+.flipbook__prompt strong { color: var(--ink); font-weight: 700; }
+
+.flipbook__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.5rem;
+}
+.flipbook__title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+.flipbook__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
+}
+.flipbook__count b {
+  font-size: 1.35rem;
+  color: var(--primary);
+  font-weight: 700;
+  margin-right: 2px;
+}
+.flipbook__count i { font-style: normal; opacity: .7; }
+
+/* ---- 书本容器：透视舞台 ---- */
+.flipbook__stage {
+  perspective: 2000px;
+}
+
+.flipbook__book {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .28s ease, box-shadow .28s ease, opacity .28s ease;
+  will-change: transform, opacity;
+}
+
+/* 向后翻：书页向左侧轻微倒伏，像被指尖掀过 */
+.flipbook__book.is-flipping-next {
+  transform: rotateY(-5.5deg) translateX(-8px);
+  box-shadow: -22px 10px 42px rgba(31, 24, 18, 0.14);
+}
+/* 向前翻：向右侧倒伏 */
+.flipbook__book.is-flipping-prev {
+  transform: rotateY(5.5deg) translateX(8px);
+  box-shadow: 22px 10px 42px rgba(31, 24, 18, 0.14);
+}
+/* 新页落定：从翻动方向回正 */
+.flipbook__book.is-landing-next {
+  animation: flipLandNext .3s cubic-bezier(.2, .8, .3, 1) both;
+}
+.flipbook__book.is-landing-prev {
+  animation: flipLandPrev .3s cubic-bezier(.2, .8, .3, 1) both;
+}
+@keyframes flipLandNext {
+  from { transform: rotateY(4deg) translateX(6px); opacity: .55; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes flipLandPrev {
+  from { transform: rotateY(-4deg) translateX(-6px); opacity: .55; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* ---- 单页：左图右文 ---- */
+.flipbook__page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr);
+  gap: 0;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 14px 34px rgba(31, 24, 18, 0.09);
+  min-height: 340px;
+}
+
+/* 图片侧 */
+.flipbook__figure {
+  position: relative;
+  margin: 0;
+  background: var(--paper-deep);
+  overflow: hidden;
+  min-height: 280px;
+}
+
+/* ---- 无配图时的降级：整页走文字单栏，不留空列 ---- */
+.flipbook__page.is-textonly {
+  grid-template-columns: minmax(0, 1fr);
+}
+.flipbook__page.is-textonly .flipbook__body {
+  padding: clamp(1.6rem, 4vw, 3.1rem) clamp(1.5rem, 5vw, 4.4rem);
+  gap: 1rem;
+}
+.flipbook__page.is-textonly .flipbook__pagetitle {
+  font-size: clamp(1.42rem, 2.9vw, 1.86rem);
+}
+.flipbook__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* 老照片式的轻微去饱和与暖调，让插画与纸色融在一起 */
+  filter: sepia(0.14) saturate(0.94) contrast(0.98);
+}
+/* 图片上叠一层纸色薄雾，避免油画过于抢眼 */
+.flipbook__figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(245, 237, 217, 0.06) 0%,
+    rgba(245, 237, 217, 0) 40%,
+    rgba(245, 237, 217, 0.10) 100%);
+}
+.flipbook__credit {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(245, 237, 217, 0.86);
+  background: rgba(31, 24, 18, 0.52);
+  padding: 5px 10px;
+  backdrop-filter: blur(2px);
+}
+
+/* 文字侧 */
+.flipbook__body {
+  padding: clamp(1.4rem, 2.6vw, 2.2rem) clamp(1.3rem, 2.6vw, 2.1rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+/* 时间地点：像一枚盖在纸上的印章 */
+.flipbook__stamp {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  border: 1px solid rgba(179, 58, 30, 0.34);
+  background: rgba(179, 58, 30, 0.055);
+  border-radius: 2px;
+  padding: 6px 12px;
+  align-self: flex-start;
+  max-width: 100%;
+}
+.flipbook__date { font-weight: 700; white-space: nowrap; }
+.flipbook__place {
+  color: var(--ink-soft);
+}
+.flipbook__place::before {
+  content: '·';
+  margin: 0 7px;
+  color: var(--primary);
+  opacity: .6;
+}
+
+.flipbook__pagetitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.28rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.42;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0.2rem 0 0;
+}
+
+.flipbook__text {
+  font-size: 0.96rem;
+  line-height: 2.02;
+  color: var(--ink-soft);
+  margin: 0;
+  text-justify: inter-ideograph;
+}
+.flipbook__text strong { color: var(--ink); font-weight: 700; }
+
+.flipbook__note {
+  font-size: 0.86rem;
+  line-height: 1.9;
+  color: var(--ink-muted);
+  margin: 0;
+  padding-left: 0.9rem;
+  border-left: 2px solid rgba(179, 58, 30, 0.28);
+}
+
+/* ---- 页签条（可直接跳页） ---- */
+.flipbook__tabs {
+  display: flex;
+  gap: 0;
+  margin-top: 1.1rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.85rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.flipbook__tab {
+  flex: 1 0 auto;
+  min-width: 74px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 10px 9px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  color: var(--ink-muted);
+  transition: color .22s, border-color .22s, background-color .22s;
+}
+.flipbook__tab-num {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  opacity: .62;
+}
+.flipbook__tab-date {
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.flipbook__tab:hover { color: var(--primary); background: rgba(179, 58, 30, 0.045); }
+.flipbook__tab.is-seen { color: var(--ink-soft); }
+.flipbook__tab.is-active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+.flipbook__tab.is-active .flipbook__tab-num { opacity: 1; }
+.flipbook__tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+/* ---- 导航 ---- */
+.flipbook__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.15rem;
+}
+.flipbook__hint {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  min-width: 0;
+}
+.flipbook__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color .22s, color .22s, background-color .22s, opacity .22s;
+}
+.flipbook__step:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(179, 58, 30, 0.05);
+}
+.flipbook__step:disabled { opacity: .34; cursor: not-allowed; }
+.flipbook__step--next {
+  background: rgba(179, 58, 30, 0.07);
+  border-color: rgba(179, 58, 30, 0.3);
+  color: var(--primary);
+}
+.flipbook__step--next:hover:not(:disabled) { background: rgba(179, 58, 30, 0.13); }
+.flipbook__chev { font-size: 11px; opacity: .8; }
+
+/* ============================================================================
+   移动端：上下堆叠
+   ========================================================================= */
+@media (max-width: 760px) {
+  .flipbook__page {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .flipbook__figure {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .flipbook__body {
+    padding: 1.3rem 1.15rem 1.5rem;
+    gap: 0.75rem;
+    justify-content: flex-start;
+  }
+  .flipbook__pagetitle { font-size: 1.2rem; }
+  .flipbook__text { font-size: 16px; line-height: 1.95; text-align: left; }
+  .flipbook__note { font-size: 15px; }
+  .flipbook__stamp { font-size: 11px; padding: 5px 10px; }
+  .flipbook__prompt { font-size: 15.5px; }
+
+  /* 页签：横向可滚，拉开间距便于点按 */
+  .flipbook__tabs { padding-bottom: 4px; }
+  .flipbook__tab { min-width: 68px; padding: 10px 8px; }
+
+  /* 导航：按钮占满宽度，触控友好 */
+  .flipbook__nav { flex-wrap: wrap; gap: 0.6rem; }
+  .flipbook__hint { order: -1; flex: 1 0 100%; margin-bottom: 0.2rem; }
+  .flipbook__step {
+    flex: 1;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+  .flipbook__book.is-flipping-next,
+  .flipbook__book.is-flipping-prev { transform: none; box-shadow: none; }
+}
+
+@media (max-width: 400px) {
+  .flipbook__tab { min-width: 62px; }
+  .flipbook__tab-date { font-size: 11px; }
+  .flipbook__text { font-size: 15.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipbook__book,
+  .flipbook__book.is-flipping-next,
+  .flipbook__book.is-flipping-prev { transition: none; transform: none; }
+  .flipbook__book.is-landing-next,
+  .flipbook__book.is-landing-prev { animation: none; }
+}
+
+/* ============================================================================
+   意义与价值（精炼版）—— .essence
+   ---------------------------------------------------------------------------
+   替代原来的两个并列长文面板。结构为「一句定性 + 三条要义」，
+   不铺陈、不堆砌，读完即走。
+   ========================================================================= */
+
+.essence {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--paper-soft);
+  padding: clamp(1.4rem, 3vw, 2.1rem) clamp(1.2rem, 3vw, 2rem);
+}
+
+/* 一句定性：全块里最大的一句，是这一页要记住的东西 */
+.essence__claim {
+  font-family: var(--font-display);
+  font-size: clamp(1.16rem, 2.4vw, 1.48rem);
+  font-weight: 700;
+  line-height: 1.72;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0 0 1.35rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.essence__claim strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.essence__points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.1rem 1.5rem;
+}
+.essence__point {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.essence__tag {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--primary);
+  border: 1px solid rgba(179, 58, 30, 0.34);
+  background: rgba(179, 58, 30, 0.055);
+  border-radius: 2px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+.essence__text {
+  font-size: 0.94rem;
+  line-height: 1.95;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.essence__text strong { color: var(--ink); font-weight: 700; }
+
+@media (max-width: 760px) {
+  .essence__points { grid-template-columns: 1fr; gap: 1.1rem; }
+  .essence__claim { font-size: 1.12rem; line-height: 1.78; }
+  .essence__text { font-size: 16px; line-height: 1.9; }
+}
+@media (max-width: 400px) {
+  .essence__text { font-size: 15.5px; }
+}

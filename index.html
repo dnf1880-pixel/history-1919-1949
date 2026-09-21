@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>有些历史不该忘 · 1919—1949 中国近现代史关键事件</title>
+<meta name="description" content="1919—1949 中国近现代史七个关键事件的互动教学网页：五四运动、中国共产党成立、南昌起义、九一八事变、七七事变、日本投降、开国大典。" />
+<meta name="theme-color" content="#EFE7D4" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EFE7D4'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23B33A1E' stroke-width='4'/%3E%3Ctext x='32' y='45' font-family='Songti SC,SimSun,serif' font-size='40' font-weight='700' fill='%23B33A1E' text-anchor='middle'%3E%E5%8F%B2%3C/text%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/design.css" />
+<link rel="stylesheet" href="assets/css/home.css" />
+<link rel="stylesheet" href="assets/css/mobile.css" />
+</head>
+<body data-event="">
+
+<!-- ==========================================================================
+     壹 · 封面：历史画卷的扉页
+     静态构图 + 流动粒子，用户点击「开启历史画卷」后才进入卷首语
+     （同时借这次点击解锁浏览器的音频播放权限）
+     ======================================================================= -->
+<div id="cover" role="dialog" aria-modal="true" aria-label="封面" hidden>
+
+  <!-- 背景：纸纹 + 流光 + 粒子（粒子由 cover.js 注入 canvas） -->
+  <div class="cover__wash" aria-hidden="true"></div>
+  <div class="cover__aurora" aria-hidden="true"></div>
+  <canvas class="cover__dust" id="cover-dust" aria-hidden="true"></canvas>
+  <div class="cover__vignette" aria-hidden="true"></div>
+
+  <div class="cover__inner">
+    <div class="cover__eyebrow">1919 — 1949</div>
+
+    <h1 class="cover__title">有些历史<br />不该忘</h1>
+
+    <div class="cover__seal" aria-hidden="true">
+      <span>史</span>
+    </div>
+
+    <p class="cover__sub">中 国 近 现 代 史 关 键 事 件</p>
+
+    <div class="cover__rule" aria-hidden="true">
+      <span></span><i></i><span></span>
+    </div>
+
+    <p class="cover__lead">
+      三十年间，一个民族把「忍让」换成了「反抗」，<br />
+      把「求人」换成了「走自己的路」。
+    </p>
+
+    <button class="cover__start" id="cover-start" type="button">
+      <span class="cover__start-text">开 启 历 史 画 卷</span>
+      <span class="cover__start-hint">建议开启声音 · 点击即开始</span>
+    </button>
+  </div>
+
+  <div class="cover__foot">七个关键节点 · 从觉醒到建国</div>
+</div>
+
+<!-- ==========================================================================
+     贰 · 卷首语：一条一条逐字打印，打完淡出，再打下一条
+     ======================================================================= -->
+<div id="intro" role="dialog" aria-modal="true" aria-label="卷首语">
+  <button class="intro__sound" id="intro-sound" type="button" aria-pressed="true" aria-label="开启或关闭声音">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="sound-label">声音已开</span>
+  </button>
+
+  <div class="intro__stage">
+    <div class="intro__lines" id="intro-lines"></div>
+    <span class="intro__caret" id="intro-caret" aria-hidden="true"></span>
+  </div>
+
+  <div class="intro__enter" id="intro-enter" hidden>
+    <button type="button">进 入 展 馆</button>
+  </div>
+
+  <button class="intro__skip" id="intro-skip" type="button">跳过卷首语 →</button>
+
+  <div class="intro__progress"><span id="intro-progress-bar"></span></div>
+</div>
+
+<!-- ==========================================================================
+     全站导航栏（由 site.js 注入）
+     ======================================================================= -->
+<header id="site-nav"></header>
+
+<main id="main-content">
+
+  <!-- ======================================================================
+       主标题与主题氛围区
+       ==================================================================== -->
+  <section class="home-hero">
+    <!-- 背景：天安门城楼剪影，极低对比，仅作氛围 -->
+    <svg class="home-hero__bg" viewBox="0 0 1400 300" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <g fill="#1F1812">
+        <rect x="0" y="252" width="1400" height="48" />
+        <rect x="120" y="196" width="1160" height="56" />
+        <rect x="200" y="168" width="1000" height="28" />
+        <path d="M180 168 L1220 168 L1200 148 L200 148 Z" />
+        <rect x="240" y="112" width="920" height="36" />
+        <path d="M220 112 L1180 112 L1150 92 L250 92 Z" />
+        <rect x="300" y="60" width="800" height="32" />
+        <path d="M280 60 L1120 60 L1090 42 L310 42 Z" />
+        <rect x="360" y="20" width="680" height="22" />
+        <path d="M340 20 L1060 20 L1030 6 L370 6 Z" />
+        <!-- 券门 -->
+        <path d="M660 252 L660 214 A40 40 0 0 1 740 214 L740 252 Z" fill="#EFE7D4" opacity="0.55" />
+        <path d="M540 252 L540 220 A26 26 0 0 1 592 220 L592 252 Z" fill="#EFE7D4" opacity="0.4" />
+        <path d="M808 252 L808 220 A26 26 0 0 1 860 220 L860 252 Z" fill="#EFE7D4" opacity="0.4" />
+      </g>
+    </svg>
+
+    <div class="home-hero__inner">
+      <div class="home-hero__eyebrow">1919 — 1949 · 三十年的答案</div>
+
+      <h1 class="home-hero__title">有些历史<br />不该忘</h1>
+      <p class="home-hero__sub">从 觉 醒 到 建 国</p>
+
+      <div class="home-hero__rule" aria-hidden="true"></div>
+
+      <p class="home-hero__lead">
+        三十年间，一个民族把"忍让"换成了"反抗"，把"求人"换成了"走自己的路"。
+        本页收录七个关键节点——它们不是孤立的日期，而是一条链：
+        思想先醒，才有政党；政党拿起枪，才有军队；军队扛住十四年，
+        才有 1949 年 10 月 1 日天安门城楼上的那句话。
+      </p>
+
+      <div class="home-stats">
+        <div class="stat">
+          <span class="stat__num">30<small style="font-size:.55em">年</small></span>
+          <span class="stat__label">1919—1949 完整跨越</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">7</span>
+          <span class="stat__label">个关键历史节点</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">14<small style="font-size:.55em">年</small></span>
+          <span class="stat__label">中国人民抗日战争</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num">3500万<small style="font-size:.55em">+</small></span>
+          <span class="stat__label">十四年抗战军民伤亡</span>
+        </div>
+      </div>
+
+      <div class="home-hero__cta">
+        <a class="btn-primary" href="#timeline">▸ 查看时间轴总览</a>
+        <a class="btn-ghost" href="events/01-wusi.html">从第一个事件开始读</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       时间轴总览
+       ==================================================================== -->
+  <section id="timeline" class="section-shell">
+    <header class="section-header">
+      <div class="section-tag">Timeline · 时间轴总览</div>
+      <h2 class="section-title">七个日子，一条链条</h2>
+      <p class="section-subtitle">
+        把七件事按时间排开，因果关系自己会浮现：每一次反抗，都是上一次教训的回声。
+        点击任意节点可直接进入对应事件页。
+      </p>
+    </header>
+
+    <div class="axis">
+      <!-- 三阶段色带 -->
+      <div class="axis__phases" aria-hidden="true">
+        <div class="axis__phase axis__phase--wake">壹 · 觉醒 1919—1921</div>
+        <div class="axis__phase axis__phase--fight">贰 · 战斗 1927—1937</div>
+        <div class="axis__phase axis__phase--found">叁 · 建国 1945—1949</div>
+      </div>
+
+      <!-- 主轴与节点 -->
+      <div class="axis__line-wrap">
+        <div class="axis__line" aria-hidden="true"></div>
+        <div class="axis__ticks" id="axis-ticks">
+          <!-- 由 home.js 按 data.js 顺序注入 -->
+        </div>
+      </div>
+
+      <p class="axis__hint">← 左右滑动查看全部七个节点 →</p>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       全部关键事件入口（三段式）
+       ==================================================================== -->
+  <section id="events" class="section-shell">
+    <header class="section-header">
+      <div class="section-tag">Index · 全部关键事件</div>
+      <h2 class="section-title">按阶段进入七个事件页</h2>
+      <p class="section-subtitle">
+        每个事件页都完整提供：时间地点、背景起因、事件经过、主要人物、历史图片与史料、
+        历史意义、关键名词解释，并在页内配有轻量互动。页底可连续切换到上一个 / 下一个事件。
+      </p>
+    </header>
+
+    <div class="stages-nav" id="stages-nav">
+      <!-- 由 home.js 注入 -->
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       学习路径引导
+       ==================================================================== -->
+  <section id="path" class="section-shell">
+    <header class="section-header">
+      <div class="section-tag">Guide · 学习路径</div>
+      <h2 class="section-title">怎么读这一遍</h2>
+      <p class="section-subtitle">四步走完，时序感、因果链、关键细节都不会漏。</p>
+    </header>
+
+    <div class="path-grid" id="path-grid">
+      <!-- 由 home.js 注入 -->
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       收束
+       ==================================================================== -->
+  <section class="section-shell" style="padding-top:0;">
+    <div class="coda">
+      <p class="coda__text">
+        这些日子，不该只留在教科书里。
+      </p>
+      <div class="coda__sig">—— 1919 — 1949 · 从觉醒到建国</div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p style="margin:0;">
+    有些历史不该忘 · <span id="footer-range">1919 — 1949</span> 中国近现代史关键事件
+  </p>
+  <p style="margin:.5rem 0 0;">
+    内容依据《义务教育历史课程标准（2022年版2025年修订）》学习主题 1.4／1.5／1.6 编排 ｜ 史实取自随附《1919—1949：从觉醒到建国——关键历史节点文档》
+  </p>
+  <p style="margin:.5rem 0 0;">
+    <a href="#timeline">时间轴总览</a> ·
+    <a href="#events">全部关键事件</a> ·
+    <a href="#path">学习路径</a>
+  </p>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/sound.js"></script>
+<script src="assets/js/home.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/cover.js"></script>
+<script src="assets/js/intro.js"></script>
+</body>
+</html>

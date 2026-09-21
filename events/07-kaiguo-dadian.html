@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>开国大典 · 1949年10月1日 ｜ 有些历史不该忘</title>
+<meta name="description" content="1949年10月1日开国大典：天安门城楼上的庄严宣告，五星红旗第一次升起，中华人民共和国成立。" />
+<meta name="theme-color" content="#100B09" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EFE7D4'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23B33A1E' stroke-width='4'/%3E%3Ctext x='32' y='45' font-family='Songti SC,SimSun,serif' font-size='40' font-weight='700' fill='%23B33A1E' text-anchor='middle'%3E%E5%8F%B2%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="../assets/css/base.css" />
+<link rel="stylesheet" href="../assets/css/design.css" />
+<link rel="stylesheet" href="../assets/css/event-grand.css" />
+<link rel="stylesheet" href="../assets/css/mobile.css" />
+</head>
+<body data-event="kaiguo">
+
+<header id="site-nav"></header>
+
+<!-- ==========================================================================
+     壹 · 全屏油画场景
+     满版油画《开国大典》铺底，文字极简 —— 靠画面、声音与那句宣告把气氛推到顶。
+     ========================================================================== -->
+<section class="grand-stage" id="grand-stage" aria-label="开国大典场景">
+
+  <!--
+    满版背景 · 油画《开国大典》
+    用整幅油画替掉原来的天安门 SVG 与红旗升起动画：
+    画面本身已经把"在哪、谁在说话、下面是什么"交代完了，
+    不需要再用自绘建筑去重建一遍场景。
+    油画下方叠一层自上而下的暗压，保证宣告文字压在画面亮部时依然可读。
+  -->
+  <div class="grand-bg" aria-hidden="true">
+    <img src="../assets/img/h07-kaiguo-oath.webp" width="1000" height="568"
+         alt="" loading="eager" decoding="async" fetchpriority="high" />
+  </div>
+  <div class="grand-bg-scrim" aria-hidden="true"></div>
+
+  <!-- 天空：黄昏到入夜 -->
+  <div class="grand-sky" aria-hidden="true"></div>
+  <!-- 云层横移 -->
+  <div class="grand-clouds" aria-hidden="true"></div>
+
+  <!-- ---------------------------------------------------------------
+       内容层：那句话 → 落款 → 控制
+       --------------------------------------------------------------- -->
+  <div class="grand-content">
+
+    <!-- 那句话 -->
+    <p class="grand-voice" id="grand-voice">
+      <span id="grand-voice-text"></span><i class="voice-caret" id="grand-caret" aria-hidden="true"></i>
+    </p>
+
+    <!-- 原声出处与重听 -->
+    <div class="grand-voice-src">
+      <span class="grand-voice-src__label">历史录音 · 毛泽东</span>
+      <button class="grand-voice-src__btn" id="grand-voice-btn" type="button">
+        <span class="ico" aria-hidden="true"></span>再听一遍这句话
+      </button>
+      <span class="grand-voice-src__note" id="grand-voice-hint">
+        1949 年 10 月 1 日 · 开国大典实况录音
+      </span>
+    </div>
+
+    <!-- 落款 -->
+    <p class="grand-dateline" id="grand-dateline">1949 · 10 · 1 &nbsp;·&nbsp; 北京 天安门</p>
+
+    <!-- 控制条 -->
+    <div class="grand-controls">
+      <button class="grand-btn" id="grand-replay" type="button" aria-pressed="false">
+        <span class="ico" aria-hidden="true"></span>重播宣告 · 奏乐
+      </button>
+      <button class="grand-btn" id="grand-audio" type="button" aria-pressed="false">
+        <span class="ico" aria-hidden="true"></span><span id="grand-audio-label">开启声音</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 滚动提示 -->
+  <div class="grand-scroll-hint" id="grand-hint" aria-hidden="true">
+    <span>继续向下 · 看这一天如何被安排</span>
+    <span class="chev"></span>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     贰 · 场景之后的史实（极简骨架）
+     ========================================================================== -->
+<section class="grand-facts" id="sec-facts" aria-label="开国大典史实">
+  <div class="grand-facts__inner">
+
+    <div class="block__head">
+      <h2 class="block__label">07 · 建国 <em>Founding</em></h2>
+      <p class="block__title">这一天，是这样走到的</p>
+    </div>
+
+    <!-- 流程条 -->
+    <div class="grand-flow">
+      <div class="flow-cell">
+        <div class="flow-date">9 月 21 日</div>
+        <p class="flow-text">中国人民政治协商会议第一届全体会议在北平中南海怀仁堂开幕。</p>
+      </div>
+      <div class="flow-cell">
+        <div class="flow-date">9 月 27 日</div>
+        <p class="flow-text">通过关于国都、纪年、国歌、国旗的四个决议案：定都北平并改名北京；以《义勇军进行曲》为代国歌；以五星红旗为国旗。</p>
+      </div>
+      <div class="flow-cell">
+        <div class="flow-date">9 月 29 日</div>
+        <p class="flow-text">通过起临时宪法作用的《中国人民政治协商会议共同纲领》。</p>
+      </div>
+      <div class="flow-cell">
+        <div class="flow-date">9 月 30 日</div>
+        <p class="flow-text">选举毛泽东为中央人民政府主席；当晚人民英雄纪念碑奠基典礼在天安门广场举行。</p>
+      </div>
+      <div class="flow-cell">
+        <div class="flow-date">10 月 1 日 · 14:00</div>
+        <p class="flow-text">中央人民政府委员会第一次会议在中南海勤政殿举行，主席、副主席及委员宣布就职。</p>
+      </div>
+      <div class="flow-cell">
+        <div class="flow-date">10 月 1 日 · 15:00</div>
+        <p class="flow-text">首都三十万军民齐聚天安门广场。毛泽东庄严宣告中华人民共和国中央人民政府成立，亲手升起第一面五星红旗。</p>
+      </div>
+    </div>
+
+    <!-- 检阅与游行 -->
+    <div class="grand-two">
+      <div class="quote-panel">
+        <div class="quote-panel__label">阅兵式</div>
+        <figure class="hist-fig">
+          <img src="../assets/img/h07-kaiguo-review.webp" width="1500" height="844" loading="lazy"
+               alt="1949 年 10 月 1 日开国大典阅兵式：受阅部队列队通过天安门广场，接受检阅" />
+          <figcaption>1949 年 10 月 1 日 · 受阅部队通过天安门广场</figcaption>
+        </figure>
+        <div class="quote-panel__text">
+          傍晚，阅兵式开始。受阅部队以海军两个排为前导，接着是步兵师、炮兵师、战车师、骑兵师，
+          由东向西通过天安门广场，接受检阅。年轻的人民空军飞机飞过天安门上空。
+          <br><br>
+          阅兵式持续近三个小时，是新中国成立后第一次大规模阅兵。
+        </div>
+      </div>
+      <div class="quote-panel">
+        <div class="quote-panel__label">群众游行</div>
+        <figure class="hist-fig">
+          <img src="../assets/img/h07-kaiguo-parade.webp" width="1000" height="639" loading="lazy"
+               alt="1949 年 10 月 1 日开国大典：天安门广场上人山人海的群众游行队伍，旗帜如林，城楼上悬挂毛泽东画像与「中华人民共和国万岁」「中央人民政府万岁」标语" />
+          <figcaption>1949 年 10 月 1 日 · 三十万军民齐聚天安门广场</figcaption>
+        </figure>
+        <div class="quote-panel__text">
+          阅兵式结束后，群众游行开始。工人、农民、学生、机关干部……
+          一队队群众高举红旗和火把，高呼口号，从天安门前走过，直到深夜。
+          <br><br>
+          天安门广场华灯齐放，焰火腾空，三十万群众彻夜欢庆。
+        </div>
+      </div>
+    </div>
+
+    <!-- 天安门城楼（历史照片） -->
+    <figure class="hist-fig hist-fig--wide">
+      <img src="../assets/img/h07-kaiguo-gate.webp" width="1500" height="1000" loading="lazy"
+           alt="1949 年 10 月 1 日开国大典：天安门城楼与观礼台，受阅部队与观礼群众齐聚广场" />
+      <figcaption>
+        1949 年 10 月 1 日 · 天安门城楼。城楼悬挂毛泽东画像，两侧标语为
+        「中华人民共和国万岁」「中央人民政府万岁」；此时国徽尚未确定（1950 年 6 月审定），故城楼上不设国徽。
+      </figcaption>
+    </figure>
+
+    <!--
+      城楼上的两张特写
+      ------------------------------------------------------------------
+      上一个九宫格的"阅兵 / 游行 / 城楼"是"场面"，这两张是"人"：
+      看完三十万人的广场，再拉近看城楼上的人 —— 历史是具体的人在做的事。
+    -->
+    <div class="grand-duo">
+      <figure class="hist-fig">
+        <img src="../assets/img/h07-kaiguo-mao-mic.webp" width="900" height="1156" loading="lazy"
+             alt="1949 年 10 月 1 日开国大典：毛泽东在天安门城楼上，面对麦克风宣读《中华人民共和国中央人民政府公告》，胸前佩戴红色主席团绶带" />
+        <figcaption>
+          1949 年 10 月 1 日 · 天安门城楼。毛泽东面对麦克风宣读
+          《中华人民共和国中央人民政府公告》。桌上那支话筒，把一句话同时送向广场和全国。
+        </figcaption>
+      </figure>
+      <figure class="hist-fig">
+        <img src="../assets/img/h07-kaiguo-mao-zhu.webp" width="900" height="564" loading="lazy"
+             alt="1949 年 10 月 1 日开国大典：毛泽东与朱德在天安门城楼上开怀大笑，身后是观礼的各界代表" />
+        <figcaption>
+          1949 年 10 月 1 日 · 天安门城楼。毛泽东与朱德。这一刻距 1927 年南昌起义
+          已过去二十二年，距 1921 年建党二十八年。
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- 交互：随堂小测 -->
+    <div class="block" style="margin-top:3rem;">
+      <div class="block__head">
+        <h2 class="block__label">随堂小测 <em>Quiz</em></h2>
+      </div>
+      <div class="quiz" data-quiz="kaiguo"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================================================
+     叁 · 上下篇切换
+     ========================================================================== -->
+<nav id="event-pager" aria-label="关键事件切换"></nav>
+
+<footer class="site-footer">
+  <p style="margin:0;">有些历史不该忘 · 开国大典 · 1949 年 10 月 1 日</p>
+  <p style="margin:.5rem 0 0;">
+    课标依据：中国现代史学习主题 1.1「中华人民共和国成立和社会主义制度的确立」——「了解中国人民政治协商会议召开、开国大典，认识中华人民共和国成立对中国和世界历史的伟大意义」
+  </p>
+  <p style="margin:.5rem 0 0;">引用自《义务教育历史课程标准（2022年版2025年修订）》</p>
+</footer>
+
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/sound.js"></script>
+<script src="../assets/js/site.js"></script>
+<script src="../assets/js/interact.js"></script>
+<script src="../assets/js/event-data-kaiguo.js"></script>
+<script src="../assets/js/grand.js"></script>
+</body>
+</html>
