@@ -74,9 +74,9 @@
       <div>
         <div class="plate">
           <div class="plate__frame">
-            <!-- 史料图一：天安门集会（内联 SVG 版画，离线可用） -->
+            <!-- 史料图一：五四运动油画 -->
             <img class="plate__photo" src="../assets/img/q01-wusi-fig1.webp"
-                 alt="1919年6月4日，北京学生集会人群（西德尼·甘博实拍）"
+                 alt="油画《五四运动》：学生队伍高擎「废除此等不平等条约」「内除国贼」等标语横幅，从天安门前奔涌而过"
                  loading="lazy" decoding="async" />
           </div>
           <div class="plate__meta">
@@ -84,7 +84,6 @@
               <strong>图一 · 天安门前 · 三千学生集会</strong><br />
               1919 年 5 月 4 日午后，学生齐集天安门前，校旗林立、传单如雪，"外争主权，内除国贼"的呼声响彻广场。
             </p>
-            <span class="plate__source">历史照片 · 西德尼·甘博摄（原件藏杜克大学图书馆）</span>
           </div>
         </div>
       </div>
@@ -125,6 +124,20 @@
       <div class="flipbook" data-flipbook="wusi"></div>
     </div>
   </section>
+<!-- ======================================================================
+       时间轴定位器（点选站点 · 逐站读事件）
+       ----------------------------------------------------------------------
+       ⚠ 2026-09-21 补：此前 interact.js 的 Locator 渲染器、design.css 的
+       .locator 全套样式、以及 window.LOCATORS 数据都已在位，但页面 HTML 里
+       从来没有 data-locator 挂载点 —— 定位器全站从未渲染过（线上实测计数为 0）。
+       此处补齐。挂载点紧跟「事件经过」，两者同属"逐节点读事件"的阅读路径。
+       ==================================================================== -->
+  <section class="section-shell" id="sec-locator" style="padding-top:0;">
+    <div class="block">
+      <div class="locator" data-locator="wusi"></div>
+    </div>
+  </section>
+
 
   <!-- ======================================================================
        主要人物

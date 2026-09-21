@@ -1,12 +1,19 @@
 # 本地开发工具脚本（非站点资源，不上线）
+# ⚠ 逐文件列举，不用 *.py 通配 —— 防误伤将来加入站点的脚本
+add_locator_mounts.py
+apply_cover_oath.py
 apply_hist.py
 apply_plates.py
 apply_user_imgs.py
+apply_user_imgs2.py
 fetch_77b.py
 fetch_hist.py
 fetch_hist2.py
 fix_captions.py
 fix_comments.py
+fix_cover_emblem.py
+fix_grand_cover.py
+normalize_flipbook_imgs.py
 probe.py
 recon.py
 revamp_grand_stage.py

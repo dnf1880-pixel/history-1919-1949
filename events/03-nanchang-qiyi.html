@@ -70,15 +70,14 @@
         <div class="plate">
           <div class="plate__frame">
             <img class="plate__photo" src="../assets/img/q03-nanchang-fig1.webp"
-                 alt="江西大旅社——南昌起义总指挥部旧址"
+                 alt="油画《南昌起义》：起义部队官兵持枪集合，红旗招展，指挥员立于台阶上向队伍讲话"
                  loading="lazy" decoding="async" />
           </div>
           <div class="plate__meta">
             <p class="plate__caption">
-              <strong>图一 · 江西大旅社 · 起义总指挥部</strong><br />
-              1927 年 7 月 27 日，前敌委员会在南昌江西大旅社成立，周恩来任书记。8 月 1 日凌晨二时，第一枪在此指挥下打响。
+              <strong>图一 · 第一枪 · 南昌城头</strong><br />
+              1927 年 8 月 1 日凌晨二时，在以周恩来为书记的前敌委员会领导下，起义部队打响了武装反抗国民党反动派的第一枪。
             </p>
-            <span class="plate__source">历史照片 · 新华网</span>
           </div>
         </div>
       </div>
@@ -114,6 +113,20 @@
       <div class="flipbook" data-flipbook="nanchang"></div>
     </div>
   </section>
+<!-- ======================================================================
+       时间轴定位器（点选站点 · 逐站读事件）
+       ----------------------------------------------------------------------
+       ⚠ 2026-09-21 补：此前 interact.js 的 Locator 渲染器、design.css 的
+       .locator 全套样式、以及 window.LOCATORS 数据都已在位，但页面 HTML 里
+       从来没有 data-locator 挂载点 —— 定位器全站从未渲染过（线上实测计数为 0）。
+       此处补齐。挂载点紧跟「事件经过」，两者同属"逐节点读事件"的阅读路径。
+       ==================================================================== -->
+  <section class="section-shell" id="sec-locator" style="padding-top:0;">
+    <div class="block">
+      <div class="locator" data-locator="nanchang"></div>
+    </div>
+  </section>
+
 
   <section class="section-shell" id="sec-people" style="padding-top:0;">
     <div class="block">

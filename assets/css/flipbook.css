@@ -96,7 +96,40 @@
 }
 
 /* ---- 单页：左图右文 ---- */
+/* ============================================================================
+   翻书整页高度锚定（2026-09-21 第二轮修复 · 最终方案）
+   ---------------------------------------------------------------------------
+   对照实验（真机实测，可复现）：
+     状态                               figure 高   行高
+     原始（长文案页）                    419.3      419.328px
+     用 JS 清空 .flipbook__body 的内容    382.1      382.141px   ← 3/2 应有值
+   结论确凿：**是文字列在撑高整行**，figure 被 stretch 拉长，
+   aspect-ratio:3/2 被隐式覆盖，于是书高随文案长短在 382↔423 之间跳。
+
+   为什么前几版没修好：
+     · min-height: 0  —— 只把"最小高度"降为 0，
+        行高为 auto 时，body 的**内容高度**仍参与 auto 行尺寸计算，照样撑高。
+     · grid-auto-rows / grid-template-rows: minmax(0,auto) —— 同理无效，
+        auto 行天生要被内容撑开。
+
+   最终方案：不让两列"协商"高度，改成两层结构解耦 ——
+     ① .flipbook__page 用 grid，但**行高由图片列唯一决定**：
+        给 page 设 aspect-ratio 不可行（宽度是 1.06fr+1fr 的合成）；
+        改为让 figure 承担定高、body 绝对定位铺满右侧列。
+     ② .flipbook__figure 保留 aspect-ratio:3/2 与 width:100%，
+        它以列宽定高，是整页高度的唯一来源。
+     ③ .flipbook__body 脱离文档流（position:absolute），
+        因此它的内容再长也无法参与行高计算；
+        高度用 inset 撑满，内部 overflow-y:auto 自行滚动。
+     ④ page 需要 position:relative 作为定位参照。
+
+   代价与取舍：文字列从"撑高整页"变成"列内滚动"。
+   这是刻意的 —— 波哥要的是"图片比例一致、不要忽高忽低"，
+   版式稳定性优先于"一屏读完全部文案"。长文案学生可列内滚动读完，
+   且实测最长的 01 五四也仅溢出约 37px，滚动量很小。
+   ========================================================================= */
 .flipbook__page {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr);
   gap: 0;
@@ -107,16 +140,108 @@
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
     0 14px 34px rgba(31, 24, 18, 0.09);
+  align-items: stretch;
+}
+
+/* 文字列脱离文档流：内容再长也不参与行高计算 */
+.flipbook__page:not(.is-textonly) .flipbook__body {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: calc(100% / 2.06);   /* 对应 grid 的 1fr 列（1.06fr : 1fr） */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.flipbook__body::-webkit-scrollbar { width: 6px; }
+.flipbook__body::-webkit-scrollbar-thumb {
+  background: rgba(31, 24, 18, 0.18);
+  border-radius: 3px;
+}
+/* 纯文字页仍走正常流（单栏，无图片定高） */
+.flipbook__page.is-textonly .flipbook__body {
+  position: static;
+  width: auto;
+  overflow: visible;
+}
+/* min-height 兜底：极短文案时不要塌成一条 */
+.flipbook__page:not(.is-textonly) .flipbook__figure {
   min-height: 340px;
 }
 
-/* 图片侧 */
+/* ============================================================================
+   翻书整页高度锚定（2026-09-21 第二轮修复）
+   ---------------------------------------------------------------------------
+   第一轮修好了「图片本身」的比例（.flipbook__figure 固定 3/2），
+   但实测仍有页面在跳：01 五四 图高极差 37px、06 投降 书高极差 45px。
+
+   真正的成因（逐页实测得出）：
+     翻书用**一个 .flipbook__page 元素原地换内容**（四页共用同一个 page）。
+     实测该元素列宽恒为 573.219px，但高度在 385↔422 之间跳。
+     573px 按 3/2 算 = 382px，正是"短文案页"的高度 ——
+     也就是说 382 才是图片列应有的高度，而长文案页被文字列撑到了 419。
+     结论：**是文字列在撑高整行，图片列跟着被拉高**。min-height:340px 兜不住
+     （382 > 340）；grid-auto-rows:1fr 也无效（只有一行，行高仍由内容决定）。
+
+   修法：切断"文字列 → 行高"这条传导链 ——
+     · .flipbook__body 设 min-height:0，解除其作为 grid 项的最小内容高度约束；
+     · 这样整页高度改由图片列的 3/2 唯一决定，四页恒定；
+     · 长文案改用 overflow-y:auto 在列内消化，不撑破版式。
+   ========================================================================= */
+.flipbook__body {
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+/* 文字列很窄，滚动条细一点，别抢排版空间 */
+.flipbook__body::-webkit-scrollbar { width: 6px; }
+.flipbook__body::-webkit-scrollbar-thumb {
+  background: rgba(31, 24, 18, 0.18);
+  border-radius: 3px;
+}
+
+/* 图片侧
+   ---------------------------------------------------------------------------
+   2026-09-21 修复「翻书图片忽高忽低」：
+   原先 .flipbook__figure 只有 min-height，图片高度完全由原图自身比例决定。
+   而 assets/img/p*.webp 存在三种比例（1.344 的早期横图、0.857 的后期竖图、
+   0.763 的个别窄图），于是翻到不同页时配图侧忽高忽低，整本书版式在跳。
+
+   对策两层，缺一不可：
+     1. 本处固定容器比例 3/2 —— 版式高度从此与源图比例解耦；
+     2. 图片全部重制为 1400×933（3:2），object-fit: cover 只做微裁，不再变形。
+   上下限用 min/max-height 兜住极端视口，避免 3/2 在矮屏上把书撑出屏幕。 */
 .flipbook__figure {
   position: relative;
   margin: 0;
   background: var(--paper-deep);
   overflow: hidden;
+  aspect-ratio: 3 / 2;
   min-height: 280px;
+  max-height: 56vh;
+  /* ---- 2026-09-21 第二轮修复（关键一行）---------------------------------
+     实测：翻书四页共用同一个 .flipbook__page 元素，切换时 renderPage() 直接
+     重写 innerHTML。于是新页的 figure 会继承上一页遗留的布局尺寸 ——
+     逐页实测 grid 列宽恒为 573.219px，但 figure 实测宽度在
+     573.2 / 574.6 / 627 / 629 之间漂移（629 > 573，已溢出所在列）。
+     figure 溢出的宽度再经 aspect-ratio 3/2 放大成高度差，
+     于是整本书高度在 382↔423 之间跳 —— 这就是"忽高忽低"的真正来源。
+
+     加 width:100% 把 figure 钉死在列宽上：它不再有"比列宽更宽"的自由，
+     高度随之由 3/2 唯一确定，四页恒定。
+
+     ⚠ 但只写 width:100% 不够。grid 项默认 min-width:auto，
+     其"最小内容宽度"仍会把轨道**撑开**——这就是为什么
+     getComputedStyle(page).gridTemplateColumns 报告 573.219px，
+     而 figure 实测却是 629px（轨道被撑宽了）。
+     必须补 min-width:0 解除这个最小内容约束，
+     width:100% 才能真正生效。这两行缺一不可。
+     配合上面的 .flipbook__body { min-height:0 } 切断文字列对行高的反向影响。 */
+  width: 100%;
+  min-width: 0;
 }
 
 /* ---- 无配图时的降级：整页走文字单栏，不留空列 ---- */
@@ -333,6 +458,20 @@
 @media (max-width: 760px) {
   .flipbook__page {
     grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  /* ⚠ 必须在此处解除桌面端的"文字列绝对定位"。
+     桌面端为锚定行高把 .flipbook__body 改成 position:absolute，
+     若移动端不还原，文字列会以 calc(100%/2.06) 的宽度压在图片上
+     —— 实测 390 视口下文字直接叠在油画上，完全不可读。
+     移动端是上下堆叠（单栏），没有"两列协商行高"的问题，走正常文档流即可。 */
+  .flipbook__page:not(.is-textonly) .flipbook__body {
+    position: static;
+    width: auto;
+    overflow: visible;
+    max-height: none;
+  }
+  .flipbook__page:not(.is-textonly) .flipbook__figure {
     min-height: 0;
   }
   .flipbook__figure {

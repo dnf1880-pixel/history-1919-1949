@@ -421,22 +421,83 @@
   margin: 0;
 }
 
-/* 检阅 / 游行 两块 */
+/* ============================================================================
+   叁 · 图片位比例统一（2026-09-21 波哥第 8 轮改版 · 第 7 项）
+   ---------------------------------------------------------------------------
+   问题：本页五张历史照片的源图比例差异极大 ——
+     阅兵 1500×844 (1.777)  vs  游行 1000×639 (1.565)   → 落差 13.6%
+     特写 900×1156 (0.779)  vs  朱德 900×564  (1.596)   → 落差 105%
+   而 .hist-fig img 是 height:auto（design.css），
+   于是「同一排两列」的图高 = 列宽 ÷ 各自比例，并排时底部必然错开一大截，
+   视觉上就是"版面很乱"。
+   对策：在**容器层**给图位固定比例，让版式高度与源图比例解耦；
+   图片一律 object-fit: cover 微裁（这几张构图都宽容，裁得起）。
+   与 flipbook 的修法同源 —— 容器定比例，源图归一化，两层缺一不可。 */
+
+/* ---- 检阅 / 游行：两张都是宽幅现场照，统一 16/10 ---- */
 .grand-two {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.25rem;
+  align-items: start;
+}
+.grand-two .quote-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.grand-two .hist-fig { margin: 0 0 1.1rem; }
+.grand-two .hist-fig img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: center 44%;
 }
 
-/* 城楼上的两张特写（场面对照：一张竖构图、一张横构图） */
+/* ---- 城楼特写：一竖一横，统一 4/5 竖幅 ----
+   原先左右两列用 0.82fr / 1.18fr 去"配平"比例差，但裁切后的观感仍不齐。
+   现在把两列改成等宽，比例由容器统一 —— 版式从此不再取决于源图。 */
 .grand-duo {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
   align-items: start;
   margin-top: 2.25rem;
 }
-.grand-duo .hist-fig { margin: 0; }
+.grand-duo .hist-fig {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.grand-duo .hist-fig img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 28%;
+}
+/* 朱德那张是横构图且主体在画面中部，竖幅裁切时重心要更低才能框住人脸 */
+.grand-duo .hist-fig:last-child img { object-position: center 42%; }
+
+/* ---- 通栏城楼大图：维持 design.css 原样，不参与比例统一 ----
+   判断依据：本页「版面乱」的成因是**并排图高度不齐**（.grand-two 差 13.6%、
+   .grand-duo 差 105%）。通栏图是单张独占一行的独图，左右没有参照物，
+   不存在对齐问题，强行给它套 3/2 反而制造了新问题：
+     桌面 1440 下 3:2 需高 733px，而 62vh 只有 558px，
+     用 max-width 反推收窄后图只剩 837px 宽（版心 1100），
+     内衬纸色背景仍是满宽 → 图缩在左边、右侧露一大条白，比改之前更乱。
+   → 该处保持原状（design.css 的 max-height:62vh + object-fit:cover 已够用），
+     只补一条居中约束，避免将来有人再动它时踩坑。 */
+.hist-fig--wide img {
+  margin-inline: auto;
+}
+
+@media (max-width: 720px) {
+  /* 窄屏下特写改为单列，竖幅比例放开，避免小图上裁掉半张脸 */
+  .grand-duo { grid-template-columns: 1fr; }
+  .grand-duo .hist-fig img { aspect-ratio: 4 / 3; object-position: center 30%; }
+}
 
 /* ============================================================================
    肆 · 移动端收敛

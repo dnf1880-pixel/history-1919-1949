@@ -118,6 +118,20 @@
       <div class="flipbook" data-flipbook="surrender"></div>
     </div>
   </section>
+<!-- ======================================================================
+       时间轴定位器（点选站点 · 逐站读事件）
+       ----------------------------------------------------------------------
+       ⚠ 2026-09-21 补：此前 interact.js 的 Locator 渲染器、design.css 的
+       .locator 全套样式、以及 window.LOCATORS 数据都已在位，但页面 HTML 里
+       从来没有 data-locator 挂载点 —— 定位器全站从未渲染过（线上实测计数为 0）。
+       此处补齐。挂载点紧跟「事件经过」，两者同属"逐节点读事件"的阅读路径。
+       ==================================================================== -->
+  <section class="section-shell" id="sec-locator" style="padding-top:0;">
+    <div class="block">
+      <div class="locator" data-locator="surrender"></div>
+    </div>
+  </section>
+
 
   <section class="section-shell" id="sec-people" style="padding-top:0;">
     <div class="block">
