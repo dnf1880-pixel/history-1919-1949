@@ -321,6 +321,112 @@
     try { voiceEl.pause(); voiceEl.currentTime = 0; } catch (e) {}
   }
 
+  /* ------------------------------------------------------------------------
+     playVoiceFile() —— 历史原声的 WebAudio 通道
+     ------------------------------------------------------------------------
+     ⚠ 2026-09-22 第12轮补。为什么必须加这一条：
+
+     波哥的实测症状是「奏乐响、毛主席原声不响」。奏乐是 OscillatorNode 合成，
+     原声是 <audio> 元素 —— 这两条通道的浏览器策略**不一样**：
+
+       · AudioContext  只要被任意一次用户手势唤醒，就永久可用
+       · <audio> 元素  走的是另一套更严的「媒体元素自动播放策略」，
+                       直接打开页面 / 刷新后没有手势，带声 play() 会被拒
+
+     所以「合成音能响、音频文件不响」不是文件坏了，是通道差异。
+
+     这里把原声也解码成 AudioBuffer、用 AudioBufferSourceNode 播出去 ——
+     只要上下文醒着，就不再受媒体元素策略约束。
+     失败时（file:// 下 fetch 不可用、解码不支持）由调用方回退到 <audio>。
+     ---------------------------------------------------------------------- */
+  var voiceBuffer = {};        /* src -> AudioBuffer（已解码完成） */
+  var voicePending = {};       /* src -> Promise（解码进行中） */
+  var voiceNodes = [];         /* 正在播的 BufferSource */
+  var voiceGain = null;
+  var voiceSeq = 0;            /* 用于丢弃「已停止之后才解码完」的旧请求 */
+
+  /* ⚠ 两个缓存必须分开：已解码的 AudioBuffer 上没有 .then，
+     若与 Promise 共用同一个槽，第二次调用就会挂在 `x.then is not a function` 上。
+     （2026-09-22 第12轮踩过这个坑 —— 预解码成功后正式起播时必炸。） */
+  function decodeVoiceFile(src) {
+    if (voiceBuffer[src]) return Promise.resolve(voiceBuffer[src]);
+    if (voicePending[src]) return voicePending[src];
+
+    var c = ensure();
+    if (!c || typeof fetch !== 'function') {
+      return Promise.reject(new Error('no-audiocontext-or-fetch'));
+    }
+    var pr = fetch(src)
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.arrayBuffer();
+      })
+      .then(function (ab) {
+        return new Promise(function (res, rej) {
+          /* 老 Safari 只有回调式 decodeAudioData */
+          var ret = c.decodeAudioData(ab, res, rej);
+          if (ret && ret.then) ret.then(res, rej);
+        });
+      })
+      .then(function (buf) {
+        voiceBuffer[src] = buf;
+        delete voicePending[src];
+        return buf;
+      })
+      .catch(function (e) {
+        delete voicePending[src];
+        throw e;
+      });
+    voicePending[src] = pr;
+    return pr;
+  }
+
+  function stopVoiceFile() {
+    voiceSeq += 1;
+    voiceNodes.forEach(function (n) {
+      try { n.onended = null; } catch (e) {}
+      try { n.stop(); } catch (e) {}
+      try { n.disconnect(); } catch (e) {}
+    });
+    voiceNodes = [];
+  }
+
+  /* 返回 true = 已接受这次播放请求（异步解码后起播）；
+     返回 false = 这条通道不可用，调用方应回退到 <audio> */
+  function playVoiceFile(src, opts) {
+    opts = opts || {};
+    if (!src) return false;
+    var c = ensure();
+    if (!c) return false;
+
+    stopVoiceFile();
+    var myToken = voiceSeq;
+
+    decodeVoiceFile(src).then(function (buf) {
+      if (myToken !== voiceSeq) return;          /* 已被 stop，丢弃 */
+      if (c.state === 'suspended') { try { c.resume(); } catch (e) {} }
+      if (!voiceGain) {
+        voiceGain = c.createGain();
+        voiceGain.gain.value = 1;
+        voiceGain.connect(masterGain);
+      }
+      var node = c.createBufferSource();
+      node.buffer = buf;
+      node.connect(voiceGain);
+      node.onended = function () {
+        if (opts.onEnd) { try { opts.onEnd(); } catch (e) {} }
+      };
+      node.start(0);
+      voiceNodes.push(node);
+      if (opts.onStart) { try { opts.onStart(); } catch (e) {} }
+    }).catch(function (e) {
+      if (myToken !== voiceSeq) return;
+      if (opts.onError) { try { opts.onError(e); } catch (err) {} }
+    });
+
+    return true;
+  }
+
   /* ---- 对外接口 ---- */
   window.Sound = {
     get muted() { return muted; },
@@ -341,6 +447,16 @@
     playAnthem: playAnthem,
     stopAnthem: stopAnthem,
     playVoice: playVoice,
-    stopVoice: stopVoice
+    stopVoice: stopVoice,
+
+    /** 音频上下文是否已经真正跑起来 —— 跑起来 = WebAudio 通道不再需要手势 */
+    isAwake: function () {
+      var c = ensure();
+      return !!c && c.state === 'running';
+    },
+    /** 预解码原声（可提前缓存，起播时不必等网络） */
+    preloadVoiceFile: decodeVoiceFile,
+    playVoiceFile: playVoiceFile,
+    stopVoiceFile: stopVoiceFile
   };
 })();

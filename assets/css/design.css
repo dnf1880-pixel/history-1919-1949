@@ -37,14 +37,14 @@
   text-decoration: none;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 1rem;
   letter-spacing: 0.03em;
   white-space: nowrap;
   flex: none;
 }
 .site-nav__brand .brand-mark {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -59,7 +59,7 @@
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  font-size: 13.5px;
+  font-size: 14px;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -115,30 +115,46 @@
   display: none;
   border-top: 1px solid var(--line);
   background: var(--paper-soft);
-  padding: 0.75rem var(--shell-pad) 1.25rem;
+  padding: 0.35rem var(--shell-pad) 1.1rem;
+  /* 矮屏（横屏手机）也能滚到底 */
+  max-height: calc(100vh - 58px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .site-nav__drawer.is-open { display: block; }
-.site-nav__drawer .drawer-group {
-  margin-top: 0.85rem;
+
+/* 移动端分组：只靠「间距 + 一条细实线」区分阶段
+   ⚠ 2026-09-22 第12轮 波哥要求简化：不再出现「壹 · 觉醒 1919—1921」这类阶段标题，
+   抽屉里只留 9 个入口（首页 / 卷首语 / 七个事件），阶段之间用间距与线隔开。 */
+.site-nav__drawer .drawer-group { margin-top: 1.15rem; }
+.site-nav__drawer .drawer-group:first-child { margin-top: 0.35rem; }
+.site-nav__drawer .drawer-group + .drawer-group {
+  border-top: 1px solid var(--line);
+  padding-top: 1.15rem;
 }
-.site-nav__drawer .drawer-group:first-child { margin-top: 0; }
-.site-nav__drawer .drawer-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  color: var(--primary);
-  margin-bottom: 0.4rem;
-}
-.site-nav__drawer a {
-  display: block;
-  padding: 9px 0;
-  font-size: 14px;
+
+/* 单条入口：名字在左，日期编号在右（小字号等宽） */
+.site-nav__drawer .drawer-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 11px 0;
+  font-size: 15px;
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px dashed var(--line);
 }
-.site-nav__drawer a:last-child { border-bottom: none; }
-.site-nav__drawer a.is-current { color: var(--primary); font-weight: 600; }
+.site-nav__drawer .drawer-link.is-current { color: var(--primary); }
+.site-nav__drawer .drawer-link.is-current .drawer-name { font-weight: 600; }
+.site-nav__drawer .drawer-name { min-width: 0; }
+.site-nav__drawer .drawer-date {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+.site-nav__drawer .drawer-link.is-current .drawer-date { color: var(--primary); }
 
 @media (max-width: 860px) {
   .site-nav__links { display: none; }
@@ -206,7 +222,27 @@
   align-items: start;
 }
 @media (min-width: 900px) {
-  .event-hero__grid { grid-template-columns: 56fr 44fr; gap: 3.5rem; }
+  .event-hero__grid {
+    grid-template-columns: 56fr 44fr;
+    gap: 3.5rem;
+    /* 任务8（2026-09-22）：两栏等高。
+       原先 align-items:start，左右栏各按自身内容定高，01—05 页右栏比左栏矮
+       60—80px，底部留一道白，看着不平衡。改成 stretch 后：
+         · 网格项撑满整行高度
+         · 右栏改为纵向 flex，.plate 占满 → 图框吸收多余高度
+         · 图注 + 来源靠 margin-top:auto 贴底
+       图框 min-height 250px 兜底，避免左栏偏矮时图框被压瘪。 */
+    align-items: stretch;
+  }
+  .event-hero__grid > div:last-child {
+    display: flex;
+    flex-direction: column;
+  }
+  .event-hero__grid .plate { flex: 1; }
+  .event-hero__grid .plate__frame {
+    flex: 1 1 auto;
+    min-height: 250px;
+  }
 }
 
 .event-hero__stage {
@@ -297,7 +333,7 @@
   line-height: 1.2;
 }
 .kpi-row .kpi-label {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--ink-muted);
   letter-spacing: 0.08em;
   line-height: 1.5;
@@ -333,7 +369,7 @@
    必须显式清零浏览器默认 margin，否则区块头会凭空多出一段间距。 */
 .block__label {
   font-family: var(--font-sans);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--primary);
   font-weight: 700;
@@ -354,13 +390,13 @@
 }
 .block__title {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.6vw, 1.65rem);
+  font-size: clamp(1.25rem, 2.6vw, 1.625rem);
   font-weight: 700;
   letter-spacing: 0.02em;
   margin: 0;
 }
 .block__body {
-  font-size: 15.5px;
+  font-size: 16px;
   line-height: 1.95;
   text-align: justify;
   text-justify: inter-ideograph;
@@ -386,7 +422,7 @@
 }
 .quote-panel__label {
   font-family: var(--font-display);
-  font-size: 1.02rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--primary);
   letter-spacing: 0.08em;
@@ -433,7 +469,7 @@
 .person-card:hover { border-color: rgba(179, 58, 30, 0.35); }
 .person-card__name {
   font-family: var(--font-display);
-  font-size: 1.12rem;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   display: flex;
@@ -455,12 +491,17 @@
   margin: 0.6rem 0 0;
 }
 
-/* === 史料图 === */
+/* === 史料图 ===
+   容器采用 flex 纵向布局：图框按固定比例自定高，图注块用 margin-top:auto
+   顶到容器底部 —— 这样在事件头里与左栏等高时，多出来的空间落在图注下方，
+   而不是把图框拉长。 */
 .plate {
   background: var(--paper-soft);
   border: 1px solid var(--line);
   border-radius: 3px;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 .plate__frame {
   position: relative;
@@ -469,6 +510,7 @@
   border-radius: 2px;
   background: var(--paper-deep);
   aspect-ratio: 16 / 10;
+  flex: none;
 }
 .plate__frame svg,
 .plate__frame img { width: 100%; height: 100%; display: block; }
@@ -484,27 +526,31 @@
   background: var(--paper-deep);
   filter: sepia(0.08) contrast(1.02);
 }
+
+/* 图注 + 来源
+   ⚠ 2026-09-22 波哥要求：照片来源统一为「照片下方靠右的灰色小字」。
+   原先 .plate__meta 是「图注 flex:1 ←→ 来源 flex:none」的横排，
+   来源被顶到图注右侧、与正文同高，看着像插在段落里（截图里就是这样）。
+   现在改成上下结构：图注在上，来源单独一行、右对齐、灰字，
+   两段互不挤压，正文排版完全不受影响。 */
 .plate__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.8rem;
-  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 0.8rem;
 }
 .plate__caption {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--ink-muted);
   line-height: 1.7;
-  flex: 1;
-  min-width: 200px;
+  margin: 0;
 }
 .plate__source {
+  display: block;
+  margin-top: 0.4rem;
+  text-align: right;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   color: var(--ink-faint);
-  flex: none;
 }
 .plate-grid {
   display: grid;
@@ -524,7 +570,7 @@
   padding: 1.6rem 1.6rem 1.5rem;
 }
 .locator__prompt {
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.85;
   color: var(--ink-muted);
   margin: 0 0 1.35rem;
@@ -546,22 +592,28 @@
   color: var(--ink-muted);
   letter-spacing: 0.04em;
 }
-.locator__count b { font-size: 1.3rem; color: var(--primary); font-weight: 700; }
+.locator__count b { font-size: 1.25rem; color: var(--primary); font-weight: 700; }
 .locator__count i { font-style: normal; opacity: .7; }
 .locator__hint {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--ink-muted);
   opacity: .85;
 }
 
-/* 轨道：一排可点的站点圆点 */
+/* 轨道：一排可点的站点圆点
+   ⚠ 2026-09-22 修正「当前圆点放大后被上沿切掉」：
+   圆点 18px、当前站 scale(1.32) → 23.8px，再加上 4px 外圈晕共 31.8px；
+   而轨道为了横向滚动设了 overflow-y: hidden，圆点原本贴着轨道上沿，
+   放大后向上伸出约 7px 正好被裁掉。
+   修法：给轨道留出 10px 上留白，圆点圆心随之落到 19px，
+   轴线（2px）改到 top: 18px 与之重合。溢出量 7.1px < 10px，不再被裁。 */
 .locator__rail {
   position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0;
-  padding: 0 2px;
+  padding: 10px 2px 0;
   margin-bottom: 1.35rem;
   overflow-x: auto;
   overflow-y: hidden;
@@ -571,7 +623,7 @@
 .locator__rail-line {
   position: absolute;
   left: 30px; right: 30px;
-  top: 9px;
+  top: 18px;
   height: 2px;
   background: var(--line);
   border-radius: 2px;
@@ -580,7 +632,7 @@
 .locator__rail-fill {
   position: absolute;
   left: 30px;
-  top: 9px;
+  top: 18px;
   height: 2px;
   max-width: calc(100% - 60px);
   background: var(--primary);
@@ -658,7 +710,7 @@
 }
 .locator__date {
   font-family: var(--font-mono);
-  font-size: 1.28rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--primary);
   letter-spacing: 0.01em;
@@ -679,54 +731,23 @@
   to   { opacity: 1; transform: none; }
 }
 
-/* 上一站 / 下一站：大按钮，方便单手操作 */
-.locator__nav {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.35rem;
-}
-.locator__step {
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  min-height: 46px;
-  padding: 0.7rem 1rem;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 3px;
-  cursor: pointer;
-  transition: border-color .22s, background-color .22s, color .22s;
-}
-.locator__step:hover:not(:disabled) {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: rgba(179, 58, 30, .05);
-}
-.locator__step:disabled { opacity: .38; cursor: not-allowed; }
-.locator__step--next { background: rgba(179, 58, 30, .07); border-color: rgba(179, 58, 30, .3); color: var(--primary); }
-.locator__step--next:hover:not(:disabled) { background: rgba(179, 58, 30, .13); }
-.locator__chev { font-size: 12px; opacity: .8; }
+/* ⚠ 2026-09-21 波哥要求取消：上一站 / 下一站按钮已移除，逐站推进改用 ← → 方向键。
+   .locator__nav / .locator__step / .locator__chev 三组样式随之删除，勿再补回。 */
 
 @media (max-width: 560px) {
   .locator { padding: 1.3rem 1.15rem 1.25rem; }
   .locator__hint { display: none; }
   .locator__dot { min-width: 56px; }
-  .locator__dot-label { font-size: 10.5px; }
+  .locator__dot-label { font-size: 11px; }
   .locator__readout { grid-template-columns: 1fr; gap: 0.2rem; }
-  .locator__date { font-size: 1.18rem; }
-  .locator__text { font-size: 14.5px; }
+  .locator__date { font-size: 1.25rem; }
+  .locator__text { font-size: 15px; }
 }
 
 /* ---- E2. 随堂小测 ---- */
 .quiz { background: var(--paper-soft); border: 1px solid var(--line); border-radius: 3px; padding: 1.75rem 1.6rem; }
 .quiz__intro {
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.8;
   color: var(--ink-muted);
   margin: 0 0 1.5rem;
@@ -763,7 +784,7 @@
   border-radius: 3px;
   background: var(--paper);
   cursor: pointer;
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.7;
   transition: border-color .2s, background-color .2s;
 }
@@ -815,7 +836,55 @@
   margin-left: auto;
 }
 
-/* ---- E3. 名词解释表 ---- */
+/* ---- E3. 事件关键知识梳理（关键信息一览 + 名词解释表） ----
+   ⚠ 2026-09-22 波哥要求：原先挂在「历史图片与史料」末尾的「史料文献」折叠卡
+   定位含糊、内容与定位器/名词表重复；已取消该独立版块，把其中真正有复习价值的
+   骨架事实收进「事件关键知识梳理」，与名词解释表并列呈现。
+   原折叠卡依赖的 .info-card 结构随之只服务于开国大典页，这里另立常显容器。 */
+.essentials-block + .essentials-block { margin-top: 1.75rem; }
+
+.essentials-block__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+.essentials-block__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin: 0;
+}
+.essentials-block__title em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.8em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: .62;
+  margin-left: 0.4em;
+}
+.essentials-block__note {
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin: 0 0 0.85rem;
+  line-height: 1.7;
+}
+
+.keyfacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px 20px;
+  background: var(--paper-soft);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1.25rem 1.4rem;
+}
+
+/* ---- E4. 名词解释表 ---- */
 .glossary-table {
   width: 100%;
   border-collapse: collapse;
@@ -823,7 +892,7 @@
   border: 1px solid var(--line);
   border-radius: 3px;
   overflow: hidden;
-  font-size: 14.5px;
+  font-size: 15px;
 }
 .glossary-table caption {
   caption-side: top;
@@ -845,7 +914,7 @@
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.04em;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--ink);
 }
 .glossary-table tbody tr:last-child td { border-bottom: none; }
@@ -859,7 +928,7 @@
 }
 @media (max-width: 640px) {
   .glossary-table td.term { white-space: normal; width: 34%; }
-  .glossary-table th, .glossary-table td { padding: 11px 12px; font-size: 13.5px; }
+  .glossary-table th, .glossary-table td { padding: 11px 12px; font-size: 14px; }
 }
 
 /* ============================================================================
@@ -906,7 +975,7 @@
 }
 .pager__title {
   font-family: var(--font-display);
-  font-size: 1.08rem;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -914,7 +983,7 @@
 }
 .pager__date {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--primary);
   letter-spacing: 0.08em;
 }

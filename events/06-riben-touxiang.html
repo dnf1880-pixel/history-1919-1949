@@ -2,16 +2,19 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
+<!-- 构建号诊断标记：freshness.js 靠它判断「本页是不是旧副本」 -->
+<meta name="site-build" content="20260923b" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>日本投降 · 1945年8月15日 ｜ 有些历史不该忘</title>
 <meta name="description" content="日本投降完整史实：时间地点、背景起因、事件经过、主要人物、史料、历史意义与关键名词解释。" />
 <meta name="theme-color" content="#EFE7D4" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EFE7D4'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23B33A1E' stroke-width='4'/%3E%3Ctext x='32' y='45' font-family='Songti SC,SimSun,serif' font-size='40' font-weight='700' fill='%23B33A1E' text-anchor='middle'%3E%E5%8F%B2%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="../assets/css/base.css" />
-<link rel="stylesheet" href="../assets/css/design.css" />
-<link rel="stylesheet" href="../assets/css/flipbook.css" />
-<link rel="stylesheet" href="../assets/css/mobile.css" />
+<link rel="stylesheet" href="../assets/css/base.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/design.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/flipbook.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/mobile.css?v=20260923b" />
+<script src="../assets/js/freshness.js?v=20260923b" defer></script>
 </head>
 <body data-event="surrender">
 
@@ -24,7 +27,7 @@
     <a href="#sec-course">事件经过</a>
     <a href="#sec-people">主要人物</a>
     <a href="#sec-plates">历史图片与史料</a>
-    <a href="#sec-glossary">关键名词</a>
+    <a href="#sec-essentials">关键知识</a>
     <a href="#sec-meaning">意义与价值</a>
     <a href="#sec-quiz">随堂小测</a>
   </div>
@@ -132,37 +135,48 @@
     </div>
   </section>
 
-
   <section class="section-shell" id="sec-people" style="padding-top:0;">
     <div class="block">
       <div class="block__head">
         <h2 class="block__label">03 · 主要人物 <em>Figures</em></h2>
       </div>
 
+      <!--
+        ⚠ 2026-09-22 波哥要求（第14轮）：主要人物改为四位 —— 徐永昌 / 麦克阿瑟 / 冈村宁次 / 梅津美治郎。
+        取人标准 = 直接出现在两场受降签字现场的人：
+          · 东京湾密苏里号（9.2）：中国代表徐永昌、盟军最高统帅麦克阿瑟、日本大本营代表梅津美治郎
+          · 南京中国战区（9.9）：侵华日军总司令冈村宁次
+        原四位（裕仁天皇 / 重光葵·梅津美治郎 / 冈村宁次 / 毛泽东）中，
+        裕仁天皇、重光葵、毛泽东移出；梅津美治郎由合并卡改为单列。
+
+        ⚠ 史实已核（五源一致：人民网 3 篇 / 中国军网 81.cn / 湖北省地质局党史栏）：
+        9 月 2 日东京湾受降仪式由盟军最高统帅麦克阿瑟主持；日方由外相重光葵代表天皇和政府、
+        陆军参谋总长梅津美治郎代表帝国大本营签字；随后战胜国代表依次签字，
+        中国代表徐永昌（军事委员会军令部部长、陆军上将）继美国代表尼米兹之后第二个签字。
+        冈村宁次 9 月 9 日在南京中国战区受降仪式上签字。
+      -->
       <div class="person-grid">
         <div class="person-card">
-          <div class="person-card__name">裕仁天皇<span class="person-card__role">日本</span></div>
-          <p class="person-card__desc">日本天皇，8 月 15 日广播《终战诏书》宣布投降。</p>
-        </div>
-        <div class="person-card">
-          <div class="person-card__name">重光葵<span class="person-card__role">日本外相</span></div>
-          <p class="person-card__desc">代表日本天皇和政府在投降书上签字。</p>
-        </div>
-        <div class="person-card">
-          <div class="person-card__name">梅津美治郎<span class="person-card__role">日军参谋总长</span></div>
-          <p class="person-card__desc">代表日本帝国大本营在投降书上签字。</p>
-        </div>
-        <div class="person-card">
-          <div class="person-card__name">冈村宁次<span class="person-card__role">中国派遣军总司令官</span></div>
-          <p class="person-card__desc">在南京签署投降书。</p>
-        </div>
-        <div class="person-card">
-          <div class="person-card__name">毛泽东<span class="person-card__role">中共领导人</span></div>
-          <p class="person-card__desc">发表《对日寇的最后一战》，号召全面反攻。</p>
+          <div class="person-card__name">徐永昌<span class="person-card__role">中国受降代表</span></div>
+          <p class="person-card__desc">
+            国民政府军事委员会军令部部长、陆军上将。1945 年 9 月 2 日在东京湾密苏里号战列舰上代表中国签字受降，
+            继美国代表尼米兹之后第二个签字。
+          </p>
         </div>
         <div class="person-card">
           <div class="person-card__name">麦克阿瑟<span class="person-card__role">盟军最高统帅</span></div>
-          <p class="person-card__desc">主持东京湾受降仪式。</p>
+          <p class="person-card__desc">
+            同盟国最高司令官。9 月 2 日主持东京湾受降仪式，以盟军最高统帅身份签字，
+            代表同盟国接受日本投降。
+          </p>
+        </div>
+        <div class="person-card">
+          <div class="person-card__name">冈村宁次<span class="person-card__role">侵华日军总司令</span></div>
+          <p class="person-card__desc">1945 年 9 月 9 日在南京中国战区受降仪式上签字，代表侵华日军向中国投降。</p>
+        </div>
+        <div class="person-card">
+          <div class="person-card__name">梅津美治郎<span class="person-card__role">日本大本营代表</span></div>
+          <p class="person-card__desc">日本陆军参谋总长。9 月 2 日代表日本帝国大本营在密苏里号签署投降书。</p>
         </div>
       </div>
     </div>
@@ -208,40 +222,53 @@
         </div>
       </div>
 
-      <div class="info-card" style="margin-top:1.5rem;">
-        <details>
-          <summary>史料文献 · 日本投降三份关键文件</summary>
-          <div class="info-body">
-            <div class="info-item">
-              <div class="info-label">《波茨坦公告》</div>
-              <div class="info-value">1945 年 7 月 26 日，中、美、英三国联合发表，敦促日本立即无条件投降</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">《终战诏书》</div>
-              <div class="info-value">1945 年 8 月 14 日御前会议决定起草，8 月 15 日由裕仁天皇广播</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">投降书</div>
-              <div class="info-value">1945 年 9 月 2 日东京湾"密苏里"号上签署；9 月 9 日南京中国战区受降</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">《对日寇的最后一战》</div>
-              <div class="info-value">1945 年 8 月 9 日毛泽东发表，号召全面反攻</div>
-            </div>
-          </div>
-        </details>
-      </div>
     </div>
   </section>
 
-  <section class="section-shell" id="sec-glossary" style="padding-top:0;">
+  <section class="section-shell" id="sec-essentials" style="padding-top:0;">
     <div class="block">
       <div class="block__head">
-        <h2 class="block__label">05 · 关键名词解释 <em>Glossary</em></h2>
+        <h2 class="block__label">05 · 事件关键知识梳理 <em>Essentials</em></h2>
       </div>
 
-      <table class="glossary-table">
-        <caption>阅读本页时遇到的专有名词，一次说清。</caption>
+      <div class="essentials-block">
+        <div class="essentials-block__head">
+          <h3 class="essentials-block__title">关键信息 <em>Key Facts</em></h3>
+        </div>
+        <div class="keyfacts">
+          <div class="info-item">
+            <div class="info-label">投降方式</div>
+            <div class="info-value">1945 年 8 月 15 日，裕仁天皇以广播《终战诏书》形式宣布无条件投降</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">东京湾签字</div>
+            <div class="info-value">1945 年 9 月 2 日 · 密苏里号战列舰甲板</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">中国战区受降</div>
+            <div class="info-value">1945 年 9 月 9 日 · 南京 · 冈村宁次签署投降书</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">投降日军</div>
+            <div class="info-value">128 万余人向中国投降</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">中国战场规模</div>
+            <div class="info-value">进行重大战役 200 余次</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">抗战历程</div>
+            <div class="info-value">十四年 · 军民伤亡 3500 万人以上</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="essentials-block">
+        <div class="essentials-block__head">
+          <h3 class="essentials-block__title">关键名词 <em>Glossary</em></h3>
+        </div>
+        <table class="glossary-table">
+        <caption>读本页真正会卡住的词，正文里已讲清的不重复。</caption>
         <thead>
           <tr>
             <th scope="col">名词</th>
@@ -255,7 +282,7 @@
           </tr>
           <tr>
             <td class="term">《终战诏书》</td>
-            <td>日本天皇 1945 年 8 月 15 日以广播形式发布的诏书，正式宣布日本接受《波茨坦公告》、无条件投降。</td>
+            <td>1945 年 8 月 14 日，日本天皇亲自出席的最高决策会议（御前会议）决定接受《波茨坦公告》；次日（8 月 15 日）天皇以广播形式发布此诏书，正式宣布日本无条件投降。</td>
           </tr>
           <tr>
             <td class="term">东京湾受降</td>
@@ -268,26 +295,6 @@
           <tr>
             <td class="term">《对日寇的最后一战》</td>
             <td>1945 年 8 月 9 日毛泽东发表的声明，号召中国人民的一切抗日力量举行全国规模的反攻。</td>
-          </tr>
-          <tr>
-            <td class="term">御前会议</td>
-            <td>由日本天皇亲自出席并作出决定的最高决策会议。1945 年 8 月 14 日的御前会议决定接受《波茨坦公告》。</td>
-          </tr>
-          <tr>
-            <td class="term">中国派遣军</td>
-            <td>日本侵华军队的最高建制，其总司令官冈村宁次在南京签署投降书。</td>
-          </tr>
-          <tr>
-            <td class="term">东方主战场</td>
-            <td>中国战场在世界反法西斯战争中的地位表述。中国战场进行重大战役 200 余次，为世界反法西斯战争胜利作出不可磨灭的巨大贡献。</td>
-          </tr>
-          <tr>
-            <td class="term">第一次完全胜利</td>
-            <td>对抗日战争胜利历史地位的表述。这是近代以来中国抗击外敌入侵的第一次完全胜利，洗刷了屡战屡败的民族耻辱。</td>
-          </tr>
-          <tr>
-            <td class="term">抗战精神</td>
-            <td>中国人民在抗日战争中孕育形成的伟大精神，是中华民族精神在抗战时期的重要体现。</td>
           </tr>
         </tbody>
       </table>
@@ -353,11 +360,11 @@
   <p style="margin:.5rem 0 0;">引用自《义务教育历史课程标准（2022年版2025年修订）》</p>
 </footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/sound.js"></script>
-<script src="../assets/js/site.js"></script>
-<script src="../assets/js/flipbook.js"></script>
-<script src="../assets/js/interact.js"></script>
-<script src="../assets/js/event-data-surrender.js"></script>
+<script src="../assets/js/data.js?v=20260923b"></script>
+<script src="../assets/js/sound.js?v=20260923b"></script>
+<script src="../assets/js/site.js?v=20260923b"></script>
+<script src="../assets/js/flipbook.js?v=20260923b"></script>
+<script src="../assets/js/interact.js?v=20260923b"></script>
+<script src="../assets/js/event-data-surrender.js?v=20260923b"></script>
 </body>
 </html>

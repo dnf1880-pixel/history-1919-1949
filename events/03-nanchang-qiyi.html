@@ -2,16 +2,19 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
+<!-- 构建号诊断标记：freshness.js 靠它判断「本页是不是旧副本」 -->
+<meta name="site-build" content="20260923b" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>南昌起义 · 1927年8月1日 ｜ 有些历史不该忘</title>
 <meta name="description" content="南昌起义完整史实：时间地点、背景起因、事件经过、主要人物、史料、历史意义与关键名词解释。" />
 <meta name="theme-color" content="#EFE7D4" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EFE7D4'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23B33A1E' stroke-width='4'/%3E%3Ctext x='32' y='45' font-family='Songti SC,SimSun,serif' font-size='40' font-weight='700' fill='%23B33A1E' text-anchor='middle'%3E%E5%8F%B2%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="../assets/css/base.css" />
-<link rel="stylesheet" href="../assets/css/design.css" />
-<link rel="stylesheet" href="../assets/css/flipbook.css" />
-<link rel="stylesheet" href="../assets/css/mobile.css" />
+<link rel="stylesheet" href="../assets/css/base.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/design.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/flipbook.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/mobile.css?v=20260923b" />
+<script src="../assets/js/freshness.js?v=20260923b" defer></script>
 </head>
 <body data-event="nanchang">
 
@@ -24,7 +27,7 @@
     <a href="#sec-course">事件经过</a>
     <a href="#sec-people">主要人物</a>
     <a href="#sec-plates">历史图片与史料</a>
-    <a href="#sec-glossary">关键名词</a>
+    <a href="#sec-essentials">关键知识</a>
     <a href="#sec-meaning">意义与价值</a>
     <a href="#sec-quiz">随堂小测</a>
   </div>
@@ -78,6 +81,7 @@
               <strong>图一 · 第一枪 · 南昌城头</strong><br />
               1927 年 8 月 1 日凌晨二时，在以周恩来为书记的前敌委员会领导下，起义部队打响了武装反抗国民党反动派的第一枪。
             </p>
+            <span class="plate__source">油画《南昌起义》· 黎冰鸿作 · 中国国家博物馆藏</span>
           </div>
         </div>
       </div>
@@ -127,37 +131,34 @@
     </div>
   </section>
 
-
   <section class="section-shell" id="sec-people" style="padding-top:0;">
     <div class="block">
       <div class="block__head">
         <h2 class="block__label">03 · 主要人物 <em>Figures</em></h2>
       </div>
 
+      <!--
+        ⚠ 2026-09-22 波哥要求：主要人物一页最多四个，避免整页铺满名字。
+        原 6 张（周恩来 / 贺龙 / 叶挺 / 朱德 / 刘伯承 / 粟裕等）精简为 4 张：
+        朱德与刘伯承合并成一张（沿用 02 页"马林·尼克尔斯基"的合并写法），
+        "粟裕等年轻军事人才"已在本页意义与价值中不再单独占位，属泛述，去掉。
+      -->
       <div class="person-grid">
         <div class="person-card">
           <div class="person-card__name">周恩来<span class="person-card__role">前委书记</span></div>
-          <p class="person-card__desc">中共前敌委员会书记，起义最高领导人。</p>
+          <p class="person-card__desc">中共前敌委员会书记，起义最高领导人，与参谋长刘伯承共同拟定作战计划。</p>
         </div>
         <div class="person-card">
           <div class="person-card__name">贺龙<span class="person-card__role">起义总指挥</span></div>
-          <p class="person-card__desc">起义总指挥，第二十军军长。指挥第二十军第一、第二师向旧藩台衙门、大士院街、牛行车站等处守军发起进攻。</p>
+          <p class="person-card__desc">第二十军军长，起义总指挥。指挥所部向旧藩台衙门、大士院街、牛行车站等处守军发起进攻。</p>
         </div>
         <div class="person-card">
           <div class="person-card__name">叶挺<span class="person-card__role">前敌总指挥</span></div>
-          <p class="person-card__desc">前敌总指挥，第十一军第二十四师师长。率部向松柏巷天主教堂、新营房、百花洲等处守军发起进攻。</p>
+          <p class="person-card__desc">第十一军第二十四师师长，前敌总指挥。率部向松柏巷天主教堂、新营房、百花洲等处守军发起进攻。</p>
         </div>
         <div class="person-card">
-          <div class="person-card__name">朱德<span class="person-card__role">参与领导</span></div>
-          <p class="person-card__desc">参与领导起义，后率部上井冈山。</p>
-        </div>
-        <div class="person-card">
-          <div class="person-card__name">刘伯承<span class="person-card__role">起义军参谋长</span></div>
-          <p class="person-card__desc">起义军参谋长，参与制定作战计划。</p>
-        </div>
-        <div class="person-card">
-          <div class="person-card__name">粟裕等<span class="person-card__role">年轻军事人才</span></div>
-          <p class="person-card__desc">在起义中成长起来的年轻军事人才，后来成为人民军队的骨干。</p>
+          <div class="person-card__name">朱德 · 刘伯承<span class="person-card__role">参与领导</span></div>
+          <p class="person-card__desc">朱德参与领导起义，后率部上井冈山与毛泽东会师；刘伯承任起义军参谋长。</p>
         </div>
       </div>
     </div>
@@ -203,56 +204,53 @@
         </div>
       </div>
 
-      <div class="info-card" style="margin-top:1.5rem;">
-        <details>
-          <summary>史料文献 · 南昌起义关键信息</summary>
-          <div class="info-body">
-            <div class="info-item">
-              <div class="info-label">发起时刻</div>
-              <div class="info-value">1927 年 8 月 1 日凌晨 2 时</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">地点</div>
-              <div class="info-value">江西南昌</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">领导机构</div>
-              <div class="info-value">中共前敌委员会（书记周恩来）</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">总指挥</div>
-              <div class="info-value">贺龙</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">前敌总指挥</div>
-              <div class="info-value">叶挺</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">参谋长</div>
-              <div class="info-value">刘伯承</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">战果</div>
-              <div class="info-value">经 5 小时激战，全歼南昌守敌</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">纪念日</div>
-              <div class="info-value">8 月 1 日 · 中国人民解放军建军节</div>
-            </div>
-          </div>
-        </details>
-      </div>
     </div>
   </section>
 
-  <section class="section-shell" id="sec-glossary" style="padding-top:0;">
+  <section class="section-shell" id="sec-essentials" style="padding-top:0;">
     <div class="block">
       <div class="block__head">
-        <h2 class="block__label">05 · 关键名词解释 <em>Glossary</em></h2>
+        <h2 class="block__label">05 · 事件关键知识梳理 <em>Essentials</em></h2>
       </div>
 
-      <table class="glossary-table">
-        <caption>阅读本页时遇到的专有名词，一次说清。</caption>
+      <div class="essentials-block">
+        <div class="essentials-block__head">
+          <h3 class="essentials-block__title">关键信息 <em>Key Facts</em></h3>
+        </div>
+        <div class="keyfacts">
+          <div class="info-item">
+            <div class="info-label">发起时刻</div>
+            <div class="info-value">1927 年 8 月 1 日凌晨 2 时</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">地点</div>
+            <div class="info-value">江西南昌</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">领导机构</div>
+            <div class="info-value">中共前敌委员会（书记周恩来）</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">指挥序列</div>
+            <div class="info-value">总指挥贺龙 · 前敌总指挥叶挺 · 参谋长刘伯承</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">战果</div>
+            <div class="info-value">经 5 小时激战，全歼南昌守敌</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">纪念日</div>
+            <div class="info-value">8 月 1 日 · 中国人民解放军建军节</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="essentials-block">
+        <div class="essentials-block__head">
+          <h3 class="essentials-block__title">关键名词 <em>Glossary</em></h3>
+        </div>
+        <table class="glossary-table">
+        <caption>读本页真正会卡住的词，正文里已讲清的不重复。</caption>
         <thead>
           <tr>
             <th scope="col">名词</th>
@@ -269,14 +267,6 @@
             <td>1927 年 4 月和 7 月，蒋介石、汪精卫先后背叛革命、屠杀共产党人和革命群众的事件，导致国共合作破裂、大革命失败。</td>
           </tr>
           <tr>
-            <td class="term">前敌委员会</td>
-            <td>简称"前委"，是中国共产党为领导某一地区的军事行动而设立的最高领导机构。南昌起义时以周恩来为书记。</td>
-          </tr>
-          <tr>
-            <td class="term">国民革命军第二方面军</td>
-            <td>南昌起义后，起义部队为便于行动而沿用的番号。起义军主力随即南下广东，图谋重振革命。</td>
-          </tr>
-          <tr>
             <td class="term">井冈山会师</td>
             <td>1928 年，朱德、陈毅率领南昌起义保留下来的部分部队上井冈山，与毛泽东领导的秋收起义部队会师，是中国工农红军创建过程中的重要事件。</td>
           </tr>
@@ -287,10 +277,6 @@
           <tr>
             <td class="term">武装夺取政权</td>
             <td>南昌起义标志着中国共产党独立领导武装斗争、以革命武装夺取政权的开端，是"枪杆子里面出政权"这一认识的实践起点。</td>
-          </tr>
-          <tr>
-            <td class="term">三个"伟大事件"</td>
-            <td>习近平总书记评价南昌起义重大意义时所用的表述，指出它在中国革命史上的里程碑地位。</td>
           </tr>
         </tbody>
       </table>
@@ -356,11 +342,11 @@
   <p style="margin:.5rem 0 0;">引用自《义务教育历史课程标准（2022年版2025年修订）》</p>
 </footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/sound.js"></script>
-<script src="../assets/js/site.js"></script>
-<script src="../assets/js/flipbook.js"></script>
-<script src="../assets/js/interact.js"></script>
-<script src="../assets/js/event-data-nanchang.js"></script>
+<script src="../assets/js/data.js?v=20260923b"></script>
+<script src="../assets/js/sound.js?v=20260923b"></script>
+<script src="../assets/js/site.js?v=20260923b"></script>
+<script src="../assets/js/flipbook.js?v=20260923b"></script>
+<script src="../assets/js/interact.js?v=20260923b"></script>
+<script src="../assets/js/event-data-nanchang.js?v=20260923b"></script>
 </body>
 </html>

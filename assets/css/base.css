@@ -43,6 +43,21 @@
   --font-sans:    "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Noto Sans SC", system-ui, sans-serif;
   --font-mono:    "JetBrains Mono", "Consolas", "SFMono-Regular", "Courier New", monospace;
 
+  /* ---- 字号阶梯（2026-09-22 归一，全站唯一，禁止再出现其它 px 值）----
+     11  角标 / 图片来源 / 小标签（brand-mark、flipbook__credit、essence__tag、plate__source）
+     12  元信息 / 眉标 / 序数 / 目录标签（block__label、axis__date、kpi-label、info-label）
+     13  图注 / 短说明 / 章节锚点条（plate__caption、locator__hint、page-sections a）
+     14  次要正文（按钮、info-value、person-card__desc、表格、导航链接）
+     15  正文小号（导语段、引文、locator__text、quiz 题干）
+     16  正文标准（block__body、flipbook__text、flipbook__prompt、essence__text）
+     17  移动端根字号（仅 mobile.css 使用）
+     20  三级标题 / 大号 mono 日期
+     22  二级标题
+     26  区块标题（block__title、stage-group__title）
+     28  统计数字
+     标题族另有 clamp() 响应式档（event-hero__title / home-hero__title / section-title），
+     不纳入本阶梯。新增组件一律从上表取值，不得再写 11.5px / 12.5px / 15.5px 这类中间值。 */
+
   /* ---- 版心 ---- */
   --shell-max: 1180px;
   --shell-pad: 1.25rem;
@@ -307,9 +322,13 @@ abbr.term-gloss:hover {
   gap: 14px;
   border-top: 1px dashed var(--line);
 }
+/* 字段名 = 标题（加粗、墨色）；字段值 = 说明（常规字重、可读灰）
+   ⚠ 2026-09-21 修正：此前两者字重/颜色写反了 —— 值加粗、字段名浅色，
+   视觉上主次颠倒。正确层级：先读「核心口号」这个标签，再读它的内容。 */
 .info-item .info-label {
-  font-size: 11px;
-  color: var(--ink-muted);
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 700;
   letter-spacing: 0.12em;
   margin-bottom: 5px;
   font-family: var(--font-mono);
@@ -317,7 +336,8 @@ abbr.term-gloss:hover {
 .info-item .info-value {
   font-size: 14px;
   line-height: 1.6;
-  font-weight: 600;
+  font-weight: 400;
+  color: var(--ink-soft);
 }
 
 /* ============================================================================
@@ -372,12 +392,12 @@ abbr.term-gloss:hover {
 }
 .timeline-title {
   font-family: var(--font-display);
-  font-size: 1.02rem;
+  font-size: 1rem;
   font-weight: 700;
   margin: 0.2rem 0 0.35rem;
 }
 .timeline-desc {
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--ink-muted);
   line-height: 1.7;
   margin: 0;

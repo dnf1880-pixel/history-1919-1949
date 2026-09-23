@@ -285,6 +285,66 @@
   });
 
   /* ========================================================================
+     重放卷首语 —— 回到最初的封面
+     ----------------------------------------------------------------------
+     ⚠ 2026-09-22 新增，同日晚修正。导航条上加了「卷首语」入口，便于随时回看。
+
+     第一版做成「直接跳进打字机那一页」，波哥反馈不对：点「卷首语」应当
+     **回到整个作品的最初封面**（第一次进入时那个「开启历史画卷」的画面），
+     由用户自己再点一次按钮走完整开场 —— 否则就丢了「开场」这个动作本身。
+
+     所以这里不再自己启动打字，而是把封面整体复位显示、把状态清干净，
+     然后交给原来的 startScroll() 流程。
+     ====================================================================== */
+  function replay() {
+    if (timer) clearTimeout(timer);
+
+    /* 这次点击就是用户手势，可用来解锁音频 */
+    if (window.Sound) {
+      window.Sound.unlock();
+      window.Sound.setMuted(false);
+    }
+
+    /* ---- 全量复位到「第一次进来」的状态 ---- */
+    skipped = false;
+    finished = false;
+    started = false;        /* ← 关键：让封面按钮重新可用 */
+    idx = 0;
+    charIdx = 0;
+    lineEl = null;
+
+    if (lineWrap) lineWrap.innerHTML = '';
+    if (progEl) progEl.style.width = '0%';
+    if (caretEl) caretEl.classList.add('is-hidden');
+    if (enterWrap) enterWrap.hidden = true;
+    if (skipBtn) skipBtn.hidden = false;
+
+    /* ---- 卷首语浮层收回未激活态 ---- */
+    overlay.classList.remove('is-done', 'is-active');
+
+    /* ---- 封面复位显示 ----
+       先 unhide、下一帧再撤 is-gone：让 0.9s 的淡入真的跑起来，
+       而不是 display:none → 直接跳到全不透明。 */
+    if (cover) {
+      cover.hidden = false;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          cover.classList.remove('is-gone', 'is-hidden');
+        });
+      });
+    }
+
+    document.body.classList.add('intro-locked');
+    window.scrollTo(0, 0);
+    updateProgress();
+
+    /* 焦点交给封面按钮，键盘用户直接回车即可继续 */
+    if (startBtn) startBtn.focus({ preventScroll: true });
+  }
+
+  window.IntroChrome = { replay: replay };
+
+  /* ========================================================================
      启动判定
      ====================================================================== */
 

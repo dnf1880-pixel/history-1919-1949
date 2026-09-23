@@ -30,16 +30,16 @@
 
   /* ---- 正文段落 ---- */
   .block__body {
-    font-size: 16.5px;
+    font-size: 16px;
     line-height: 1.95;
     text-align: left;
     text-justify: auto;
   }
 
   /* ---- 表格 ---- */
-  .glossary-table { font-size: 15.5px; }
+  .glossary-table { font-size: 16px; }
   .glossary-table th,
-  .glossary-table td { padding: 0.85rem 0.75rem; font-size: 15.5px; }
+  .glossary-table td { padding: 0.85rem 0.75rem; font-size: 16px; }
   .glossary-table td.term { white-space: normal; width: 36%; }
 
   /* ---- 各类说明性文字：与正文同步抬升，避免「正文大、注释小」的割裂 ---- */
@@ -55,7 +55,7 @@
   .quote-panel__text,
   .flow-text,
   .info-value,
-  .fb-head { font-size: 15.5px; line-height: 1.85; }
+  .fb-head { font-size: 16px; line-height: 1.85; }
 
   /* ---- 标签类小字：小屏不再压缩，守住可读下限 ---- */
   .block__label { font-size: 12px; letter-spacing: 0.06em; }
@@ -70,7 +70,7 @@
   .axis__label,
   .axis__hint,
   .card__meta,
-  .path-card__step { font-size: 12.5px; }
+  .path-card__step { font-size: 13px; }
 
   /* ---- mono 文本：日期 / 序号 / 编码 ---- */
   .timeline-date,
@@ -81,12 +81,12 @@
 
   /* ---- 章节锚点条：小屏更要看得清、点得准 ---- */
   .page-sections a {
-    font-size: 13.5px;
+    font-size: 14px;
     padding: 0.5rem 0.7rem;
   }
 
   /* ---- 引文块 ---- */
-  .quote-panel__text { font-size: 15.5px; }
+  .quote-panel__text { font-size: 16px; }
 
   /* ---- 时间线标题 ---- */
   .timeline-title { font-size: 1.05rem; }
@@ -97,14 +97,14 @@
 
   /* ---- 小测选项：触控友好的行高 ---- */
   .quiz__opt { padding: 0.7rem 0.85rem; }
-  .quiz__idx { font-size: 12.5px; }
+  .quiz__idx { font-size: 13px; }
 }
 
 /* ============================================================================
    贰 · 小屏手机（≤400px）
    ========================================================================= */
 @media (max-width: 400px) {
-  body { font-size: 16.5px; }
+  body { font-size: 16px; }
 
   .block__body { font-size: 16px; line-height: 1.95; }
 
@@ -125,7 +125,7 @@
   .glossary-table th,
   .glossary-table td { font-size: 15px; }
 
-  .block__label { font-size: 11.5px; letter-spacing: 0.04em; }
+  .block__label { font-size: 12px; letter-spacing: 0.04em; }
   .plate__source,
   .stage-chip,
   .event-hero__order,
@@ -136,7 +136,7 @@
    叁 · 横屏手机（视距更远，行高略收，避免一屏装不下几行）
    ========================================================================= */
 @media (max-width: 900px) and (orientation: landscape) {
-  body { font-size: 16.5px; line-height: 1.75; }
+  body { font-size: 16px; line-height: 1.75; }
   .block__body { font-size: 16px; line-height: 1.85; }
 }
 
@@ -167,5 +167,5 @@
   .grand-voice-fig { width: clamp(180px, 46vw, 260px); }
 }
 @media (max-width: 640px) {
-  .hist-fig figcaption { font-size: 11.5px; }
+  .hist-fig figcaption { font-size: 12px; }
 }

@@ -1,0 +1,4 @@
+{
+  "build": "20260923b",
+  "note": "由 bump_build.py 自动同步。freshness.js 靠它判断线上是否有更新版本；请求时带随机 query 以绕过 CDN 缓存。"
+}

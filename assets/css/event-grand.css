@@ -229,63 +229,12 @@
     0 0 46px rgba(255, 176, 96, 0.44);
 }
 
-/* ---- 原声出处与重听 ---- */
-.grand-voice-src {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 0.35rem 0 0;
-}
-.grand-voice-src__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: #FFD166;
-  border: 1px solid rgba(255, 209, 102, 0.44);
-  background: rgba(255, 209, 102, 0.1);
-  border-radius: 2px;
-  padding: 4px 10px;
-  white-space: nowrap;
-}
-.grand-voice-src__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: #FFF3E0;
-  background: rgba(214, 38, 23, 0.3);
-  border: 1px solid rgba(255, 209, 102, 0.5);
-  border-radius: 2px;
-  padding: 9px 18px;
-  min-height: 40px;
-  cursor: pointer;
-  transition: border-color .25s, background-color .25s, transform .18s;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-.grand-voice-src__btn:hover {
-  border-color: #FFD166;
-  background: rgba(214, 38, 23, 0.48);
-}
-.grand-voice-src__btn:active { transform: scale(0.975); }
-.grand-voice-src__btn .ico {
-  width: 0; height: 0;
-  border-left: 8px solid #FFD166;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  flex: none;
-}
-.grand-voice-src__note {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  color: rgba(255, 236, 214, 0.62);
-}
+/* ----------------------------------------------------------------------------
+   ⚠ 2026-09-21 波哥要求精简首屏控件，以下样式已删除，勿再补回：
+     .grand-voice-src / __label / __btn / __note  —— 「历史录音 · 毛泽东」标签 + 「再听一遍这句话」大按钮
+     .grand-controls / .grand-btn / .grand-btn .ico —— 「重播宣告 · 奏乐」+「开启声音／声音已开启」两个按钮
+   替代方案：右下角一个纯图标 .grand-mic（话筒符号），见下方定义。
+   ---------------------------------------------------------------------------- */
 
 /* 日期落款 */
 .grand-dateline {
@@ -299,45 +248,137 @@
 }
 .grand-dateline.is-shown { opacity: 1; }
 
-/* ---- 控制条 ---- */
-.grand-controls {
-  display: flex;
-  gap: 0.7rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1.9rem;
-}
-
-.grand-btn {
+/* ----------------------------------------------------------------------------
+   右下角 · 重听话筒（纯图标）
+   ---------------------------------------------------------------------------
+   2026-09-21 新增，替代原来的「再听一遍这句话」大按钮。
+   设计要点：
+     ① 位置 —— 舞台右下角 absolute，与居中的内容层完全错开，
+        既不抢戏，也不与右上角的滚动提示同侧（提示在底部居中，矮屏才移到右下）。
+     ② 视觉 —— 墨底 + 模糊，透明度 0.5 起步：平时是"背景里的一个工具"，
+        悬停才升到 1 并转金色，符合"不突兀"的要求。
+     ③ 触控 —— 44×44 命中区（图标本体 21px），满足移动端最小触控靶。
+     ④ 状态 —— aria-pressed 沿用原按钮语义，暂作静音感知标记。
+   ---------------------------------------------------------------------------- */
+.grand-mic {
+  position: absolute;
+  right: clamp(0.9rem, 3vw, 1.6rem);
+  bottom: clamp(0.9rem, 3vw, 1.6rem);
+  z-index: 12;                     /* 高于内容层(10)与滚动提示(11)，确保可点 */
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  font-weight: 600;
-  color: rgba(255, 243, 224, 0.9);
-  background: rgba(16, 11, 9, 0.44);
-  border: 1px solid rgba(255, 243, 224, 0.3);
-  border-radius: 2px;
-  padding: 10px 18px;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 243, 224, 0.22);
+  border-radius: 50%;
+  background: rgba(16, 11, 9, 0.42);
+  color: #FFF3E0;
+  opacity: 0.5;
   cursor: pointer;
-  transition: border-color .25s, background-color .25s, color .25s;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  transition: opacity .3s, border-color .3s, color .3s, background-color .3s, transform .18s;
 }
-.grand-btn:hover {
-  border-color: #FFD166;
-  color: #FFF3E0;
-  background: rgba(214, 38, 23, 0.24);
+.grand-mic svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
-.grand-btn .ico {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #FFD166;
-  flex: none;
+.grand-mic:hover,
+.grand-mic:focus-visible {
+  opacity: 1;
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.66);
+  background: rgba(16, 11, 9, 0.62);
+  outline: none;
 }
-.grand-btn[aria-pressed="false"] .ico { background: rgba(255, 243, 224, 0.34); }
+.grand-mic:active { transform: scale(0.94); }
+/* 正在播报：图标呼吸，提示"声音在响"（无文字，不占版面） */
+.grand-mic.is-playing {
+  opacity: 1;
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.66);
+  animation: micPulse 1.25s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.42); }
+  50%      { box-shadow: 0 0 0 7px rgba(255, 209, 102, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grand-mic.is-playing { animation: none; }
+}
+
+/* 自动播放被拦：话筒显形 + 挂出文字入口（⚠ 2026-09-22 第11轮补）
+   ----------------------------------------------------------------------------
+   只在浏览器真的拒绝带声自动播放时才出现。能正常出声时它永远是原来那个
+   0.5 透明度的安静话筒 —— 不改变「一句话 + 落款 + 一个不抢戏话筒」的首屏克制。
+   被拦时再不提示，学生就只能听一段没有声音的默片。 */
+.grand-mic.needs-tap {
+  opacity: 1;
+  color: #FFD166;
+  border-color: rgba(255, 209, 102, 0.7);
+  background: rgba(16, 11, 9, 0.62);
+  animation: micPulse 1.7s ease-in-out infinite;
+}
+.grand-mic.needs-tap::after {
+  content: '点击听原声';
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #FFE9C2;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grand-mic.needs-tap { animation: none; }
+}
+
+/* ----------------------------------------------------------------------------
+   · 配图说明（紧随落款，随落款一起浮现）
+   ---------------------------------------------------------------------------
+   ⚠ 2026-09-22 第13轮：首屏换成近景城楼油画后，画面把城楼画成了 1950 年的形制
+   （重檐正中挂了国徽、东侧标语是「世界人民大团结万岁」），这两样 1949 年 10 月 1 日
+   都还没有。波哥定的处理：不改图，加图注如实说明。
+
+   ⚠ 2026-09-22 第13轮二改（波哥定）：**弃用"压画面的水印式图注"**，改为紧随落款一行、
+   随落款一起浮现，文案精简为一行。为什么不放画面最底角（旧方案实测数据，别再试）：
+   打字跑完后"那句话"排满两行横跨几乎整幅宽度（390 下右缘到 370、1440 下到 1162），
+   底部还有居中滚动提示与右下话筒 —— 390—1440 全区间都没有能容纳图注的空位。
+
+   ⚠ 为什么要 .grand-sign 包一层：.grand-content 的 gap 是 clamp(1.25rem,3.5vh,2.25rem)，
+   落款与图注属同一组信息必须紧贴；做成兄弟节点会被 gap 撑开 20—36px。
+   ---------------------------------------------------------------------------- */
+.grand-sign {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+.grand-note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: rgba(255, 236, 214, 0.6);
+  /* 仍压在画面上，靠描边阴影在亮暗底色上都读得出 */
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
+  /* 与落款同节奏：先暗，打字完成后与落款一起 .is-shown 浮现 */
+  opacity: 0;
+  transition: opacity 1s ease .4s;
+}
+.grand-note.is-shown { opacity: 1; }
 
 /* 提示文字（首屏滚动提示） */
 .grand-scroll-hint {
@@ -356,7 +397,7 @@
   align-items: center;
   gap: 0.4rem;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.2em;
   color: rgba(255, 243, 224, 0.72);
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
@@ -538,9 +579,8 @@
   }
 
   .grand-dateline { letter-spacing: 0.22em; }
-  .grand-controls { margin-top: 1.2rem; }
 
-  .grand-scroll-hint { font-size: 9.5px; letter-spacing: 0.14em; bottom: 0.85rem; }
+  .grand-scroll-hint { font-size: 11px; letter-spacing: 0.14em; bottom: 0.85rem; }
 }
 
 @media (max-width: 640px) {
@@ -559,11 +599,13 @@
       0 0 46px rgba(255, 176, 96, 0.3);
   }
 
-  .grand-btn {
-    padding: 9px 14px;
-    font-size: 11px;
-    letter-spacing: 0.1em;
+  .grand-mic {
+    width: 40px;
+    height: 40px;
+    right: 0.8rem;
+    bottom: 0.8rem;
   }
+  .grand-mic svg { width: 19px; height: 19px; }
 
   /* 窄屏提示文字折成 2 行 → 自身高到 32px，bottom 必须再压 */
   .grand-scroll-hint { bottom: 0.6rem; }
@@ -603,38 +645,17 @@
     min-height: 0;
   }
 
-  /* 落款 · 出处 · 重听 —— 并成一条行内横带，省掉约 2 行高度 */
-  .grand-voice-src {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0;
-  }
-  .grand-voice-src__note { display: none; }
-  .grand-voice-src__label {
-    font-size: 10px;
-    padding: 3px 8px;
-    letter-spacing: 0.14em;
-  }
-  .grand-voice-src__btn {
-    font-size: 12px;
-    padding: 7px 13px;
-    min-height: 34px;
-  }
-
+  /* 落款 · 重听 —— 矮视口下省掉为折行预留的高度 */
   .grand-dateline {
     margin: 0;
     font-size: 11px;
     letter-spacing: 0.26em;
   }
 
-  .grand-controls { margin-top: 0.4rem; gap: 0.5rem; }
-  .grand-btn { padding: 7px 13px; font-size: 11px; letter-spacing: 0.1em; }
-
-  /* 滚动提示 → 右下角，只留箭头，避开居中的控制条 */
+  /* 滚动提示 → 右下角，只留箭头，避开居中的落款 */
   .grand-scroll-hint {
     left: auto;
-    right: 1rem;
+    right: 4.4rem;               /* 让开右下角的话筒按钮 */
     bottom: 0.7rem;
     transform: none;
     flex-direction: row;
@@ -645,8 +666,9 @@
 
 /* 极矮屏兜底 */
 @media (max-height: 460px) {
-  .grand-voice-src__label { display: none; }
   .grand-voice { font-size: clamp(1rem, 4.4vh, 1.6rem); }
+  .grand-mic { width: 36px; height: 36px; }
+  .grand-mic svg { width: 17px; height: 17px; }
 }
 
 /* 降低动态偏好：关闭所有持续性动画 */

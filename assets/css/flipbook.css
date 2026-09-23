@@ -18,7 +18,7 @@
 
 /* ---- 头部 ---- */
 .flipbook__prompt {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.85;
   color: var(--ink-soft);
   margin: 0 0 1.15rem;
@@ -50,7 +50,7 @@
   letter-spacing: 0.08em;
 }
 .flipbook__count b {
-  font-size: 1.35rem;
+  font-size: 1.375rem;
   color: var(--primary);
   font-weight: 700;
   margin-right: 2px;
@@ -280,7 +280,7 @@
   bottom: 0;
   z-index: 2;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   color: rgba(245, 237, 217, 0.86);
   background: rgba(31, 24, 18, 0.52);
@@ -305,7 +305,7 @@
   flex-wrap: wrap;
   gap: 0;
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--primary);
   border: 1px solid rgba(179, 58, 30, 0.34);
@@ -328,7 +328,7 @@
 
 .flipbook__pagetitle {
   font-family: var(--font-display);
-  font-size: clamp(1.28rem, 2.5vw, 1.6rem);
+  font-size: clamp(1.28rem, 2.5vw, 1.625rem);
   font-weight: 700;
   line-height: 1.42;
   letter-spacing: 0.02em;
@@ -337,7 +337,7 @@
 }
 
 .flipbook__text {
-  font-size: 0.96rem;
+  font-size: 1rem;
   line-height: 2.02;
   color: var(--ink-soft);
   margin: 0;
@@ -346,7 +346,7 @@
 .flipbook__text strong { color: var(--ink); font-weight: 700; }
 
 .flipbook__note {
-  font-size: 0.86rem;
+  font-size: 0.875rem;
   line-height: 1.9;
   color: var(--ink-muted);
   margin: 0;
@@ -387,7 +387,7 @@
   opacity: .62;
 }
 .flipbook__tab-date {
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
@@ -483,11 +483,11 @@
     gap: 0.75rem;
     justify-content: flex-start;
   }
-  .flipbook__pagetitle { font-size: 1.2rem; }
+  .flipbook__pagetitle { font-size: 1.25rem; }
   .flipbook__text { font-size: 16px; line-height: 1.95; text-align: left; }
   .flipbook__note { font-size: 15px; }
   .flipbook__stamp { font-size: 11px; padding: 5px 10px; }
-  .flipbook__prompt { font-size: 15.5px; }
+  .flipbook__prompt { font-size: 16px; }
 
   /* 页签：横向可滚，拉开间距便于点按 */
   .flipbook__tabs { padding-bottom: 4px; }
@@ -510,7 +510,7 @@
 @media (max-width: 400px) {
   .flipbook__tab { min-width: 62px; }
   .flipbook__tab-date { font-size: 11px; }
-  .flipbook__text { font-size: 15.5px; }
+  .flipbook__text { font-size: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -566,7 +566,7 @@
 .essence__tag {
   align-self: flex-start;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.16em;
   color: var(--primary);
@@ -577,7 +577,7 @@
   white-space: nowrap;
 }
 .essence__text {
-  font-size: 0.94rem;
+  font-size: 1rem;
   line-height: 1.95;
   color: var(--ink-soft);
   margin: 0;
@@ -586,9 +586,9 @@
 
 @media (max-width: 760px) {
   .essence__points { grid-template-columns: 1fr; gap: 1.1rem; }
-  .essence__claim { font-size: 1.12rem; line-height: 1.78; }
+  .essence__claim { font-size: 1.125rem; line-height: 1.78; }
   .essence__text { font-size: 16px; line-height: 1.9; }
 }
 @media (max-width: 400px) {
-  .essence__text { font-size: 15.5px; }
+  .essence__text { font-size: 16px; }
 }

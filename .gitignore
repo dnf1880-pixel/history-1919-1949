@@ -19,9 +19,24 @@ recon.py
 revamp_grand_stage.py
 verify_hist.py
 wire_plates.py
+# —— 2026-09-22 第十轮 ——
+fix_round10_ai.py
+fix_round10_imgs.py
+restructure_essentials.py
+normalize_type_scale.py
+trim_wusi_edges.py
+trim_glossary.py
+# —— 2026-09-22 第十一轮 ——
+fix_round11_ai.py
+fix_round13_grand.py
+fix_round14.py
+fix_round14b.py
+bump_build.py
 
 # 测试目录与截图
 _test/
+# 验收截图（含线上真机截图），不随站点发布
+shots/
 
 # 素材原始库（仅用于筛选，站点只用 assets/img/ 里的成品）
 hist/

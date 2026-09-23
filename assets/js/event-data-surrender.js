@@ -7,7 +7,7 @@
 /* ---------- 时间轴定位：七个关键帧 ---------- */
 window.LOCATORS = window.LOCATORS || {};
 window.LOCATORS.surrender = {
-  prompt: '从波茨坦公告到南京受降',
+  prompt: '从波茨坦公告到南京受降，把日本投降放回 1945 年的时间坐标上。',
   stops: [
     {
       date: '1945 年 7 月 26 日',

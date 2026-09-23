@@ -69,7 +69,7 @@
         '<div class="locator__head">' +
           '<span class="locator__count"><b class="locator__now">' + (startAt + 1) + '</b>' +
             '<i>/' + stops.length + '</i></span>' +
-          '<span class="locator__hint">点圆点直接跳转 · 或用左右按钮逐站推进</span>' +
+          '<span class="locator__hint">点圆点跳转 · 左右方向键逐站推进</span>' +
         '</div>' +
         '<div class="locator__rail" role="radiogroup" aria-label="时间轴站点">' +
           '<div class="locator__rail-line" aria-hidden="true"></div>' +
@@ -79,12 +79,6 @@
         '<div class="locator__readout">' +
           '<div class="locator__date"></div>' +
           '<div class="locator__text"></div>' +
-        '</div>' +
-        '<div class="locator__nav">' +
-          '<button type="button" class="locator__step" data-step="-1">' +
-            '<span class="locator__chev" aria-hidden="true">◂</span>上一站</button>' +
-          '<button type="button" class="locator__step locator__step--next" data-step="1">' +
-            '下一站<span class="locator__chev" aria-hidden="true">▸</span></button>' +
         '</div>';
 
       var dotEls = host.querySelectorAll('.locator__dot');
@@ -93,8 +87,6 @@
       var dateEl = host.querySelector('.locator__date');
       var textEl = host.querySelector('.locator__text');
       var readoutEl = host.querySelector('.locator__readout');
-      var prevBtn = host.querySelector('[data-step="-1"]');
-      var nextBtn = host.querySelector('[data-step="1"]');
       var idx = startAt;
 
       function render(animate) {
@@ -112,10 +104,9 @@
           d.setAttribute('aria-checked', on ? 'true' : 'false');
           /* 已走过的站点标记为 seen，视觉上形成"进度" */
           d.classList.toggle('is-seen', i <= idx);
+          /* radiogroup 键盘可达性：只有当前项可 Tab 进入 */
+          d.setAttribute('tabindex', on ? '0' : '-1');
         });
-
-        prevBtn.disabled = idx === 0;
-        nextBtn.disabled = idx === last;
 
         /* 切换时给读出一段轻微的淡入，提示内容已更新 */
         if (animate) {
@@ -142,20 +133,21 @@
       Array.prototype.forEach.call(dotEls, function (d) {
         d.addEventListener('click', function () {
           goTo(parseInt(d.getAttribute('data-i'), 10), true);
+          d.focus();
         });
       });
 
-      /* 上一步 / 下一步 */
-      host.querySelectorAll('.locator__step').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          goTo(idx + parseInt(btn.getAttribute('data-step'), 10), true);
+      /* 键盘：← → 在圆点组内移动（方向键语义符合 radiogroup 习惯）
+         ⚠ 2026-09-21：上一站/下一站按钮已按波哥要求取消，
+         方向键成为唯一的逐站推进方式，因此把监听挂到整套圆点上而非 host，
+         并在焦点转入时直接落到当前站点。 */
+      Array.prototype.forEach.call(dotEls, function (d) {
+        d.addEventListener('keydown', function (ev) {
+          if (ev.key === 'ArrowLeft')  { ev.preventDefault(); goTo(idx - 1, true); dotEls[idx].focus(); }
+          if (ev.key === 'ArrowRight') { ev.preventDefault(); goTo(idx + 1, true); dotEls[idx].focus(); }
+          if (ev.key === 'Home')       { ev.preventDefault(); goTo(0, true); dotEls[0].focus(); }
+          if (ev.key === 'End')        { ev.preventDefault(); goTo(last, true); dotEls[last].focus(); }
         });
-      });
-
-      /* 键盘：← → 在圆点组内移动（方向键语义符合 radiogroup 习惯） */
-      host.addEventListener('keydown', function (ev) {
-        if (ev.key === 'ArrowLeft') { ev.preventDefault(); goTo(idx - 1, true); dotEls[idx].focus(); }
-        if (ev.key === 'ArrowRight') { ev.preventDefault(); goTo(idx + 1, true); dotEls[idx].focus(); }
       });
 
       render(false);

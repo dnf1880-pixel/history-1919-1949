@@ -6,12 +6,25 @@
 <title>有些历史不该忘 · 1919—1949 中国近现代史关键事件</title>
 <meta name="description" content="1919—1949 中国近现代史七个关键事件的互动教学网页：五四运动、中国共产党成立、南昌起义、九一八事变、七七事变、日本投降、开国大典。" />
 <meta name="theme-color" content="#EFE7D4" />
+
+<!-- 构建号诊断标记 + 防缓存（2026-09-23 新增）
+     --------------------------------------------------------------------------
+     现象：手机端首次直连首页仍出现已下线的「学习路径」版块，PC 端正常。
+     根因：旧版 index.html 被缓存，且旧 HTML 里的 JS 是**无参数**引用，
+     会命中 workbuddy.host 的路径级旧缓存 → 拿到旧 home.js（其中仍有 renderPath）。
+     这三行让浏览器/WebView 尽量不缓存 HTML；site-build 供线上排查时一眼比对版本。
+     ⚠ 对「已经缓存到用户设备上的旧 HTML」无法追溯生效 —— 只能等缓存过期或重发刷新。 -->
+<meta name="site-build" content="20260923b" />
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EFE7D4'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23B33A1E' stroke-width='4'/%3E%3Ctext x='32' y='45' font-family='Songti SC,SimSun,serif' font-size='40' font-weight='700' fill='%23B33A1E' text-anchor='middle'%3E%E5%8F%B2%3C/text%3E%3C/svg%3E" />
 
-<link rel="stylesheet" href="assets/css/base.css" />
-<link rel="stylesheet" href="assets/css/design.css" />
-<link rel="stylesheet" href="assets/css/home.css" />
-<link rel="stylesheet" href="assets/css/mobile.css" />
+<link rel="stylesheet" href="assets/css/base.css?v=20260923b" />
+<link rel="stylesheet" href="assets/css/design.css?v=20260923b" />
+<link rel="stylesheet" href="assets/css/home.css?v=20260923b" />
+<link rel="stylesheet" href="assets/css/mobile.css?v=20260923b" />
+<script src="assets/js/freshness.js?v=20260923b" defer></script>
 </head>
 <body data-event="">
 
@@ -128,7 +141,7 @@
 
       <div class="home-stats">
         <div class="stat">
-          <span class="stat__num">30<small style="font-size:.55em">年</small></span>
+          <span class="stat__num">30<small class="stat__unit">年</small></span>
           <span class="stat__label">1919—1949 完整跨越</span>
         </div>
         <div class="stat">
@@ -136,18 +149,21 @@
           <span class="stat__label">个关键历史节点</span>
         </div>
         <div class="stat">
-          <span class="stat__num">14<small style="font-size:.55em">年</small></span>
+          <span class="stat__num">14<small class="stat__unit">年</small></span>
           <span class="stat__label">中国人民抗日战争</span>
         </div>
         <div class="stat">
-          <span class="stat__num">3500万<small style="font-size:.55em">+</small></span>
+          <span class="stat__num">3500万<small class="stat__unit">+</small></span>
           <span class="stat__label">十四年抗战军民伤亡</span>
         </div>
       </div>
 
       <div class="home-hero__cta">
         <a class="btn-primary" href="#timeline">▸ 查看时间轴总览</a>
-        <a class="btn-ghost" href="events/01-wusi.html">从第一个事件开始读</a>
+        <!-- ⚠ 2026-09-22：此链接由 JS 在运行时补 ?v=构建号（见 site.js 的 withBuild），
+             用于绕开 workbuddy.host CDN 的路径级旧缓存。此处 href 保持干净形态，
+             保证 file:// 本地双击打开与 GitHub Pages 都正常。 -->
+        <a class="btn-ghost" href="events/01-wusi.html" data-buildlink="1">从第一个事件开始读</a>
       </div>
     </div>
   </section>
@@ -187,33 +203,14 @@
 
   <!-- ======================================================================
        全部关键事件入口（三段式）
+       ----------------------------------------------------------------------
+       ⚠ 2026-09-22 波哥要求：删掉本节原有的「Index · 全部关键事件 / 按阶段进入
+       七个事件页」标题区与那段功能说明。理由 —— 时间轴总览已经交代了"有七个
+       事件、分三个阶段"，再补一个标题和一段自述功能的话，属于无效信息；
+       卡片直接接在时间轴下方，一看就懂。故本节只留 #stages-nav 挂载点。
        ==================================================================== -->
-  <section id="events" class="section-shell">
-    <header class="section-header">
-      <div class="section-tag">Index · 全部关键事件</div>
-      <h2 class="section-title">按阶段进入七个事件页</h2>
-      <p class="section-subtitle">
-        每个事件页都完整提供：时间地点、背景起因、事件经过、主要人物、历史图片与史料、
-        历史意义、关键名词解释，并在页内配有轻量互动。页底可连续切换到上一个 / 下一个事件。
-      </p>
-    </header>
-
+  <section id="events" class="section-shell" style="padding-top:0;">
     <div class="stages-nav" id="stages-nav">
-      <!-- 由 home.js 注入 -->
-    </div>
-  </section>
-
-  <!-- ======================================================================
-       学习路径引导
-       ==================================================================== -->
-  <section id="path" class="section-shell">
-    <header class="section-header">
-      <div class="section-tag">Guide · 学习路径</div>
-      <h2 class="section-title">怎么读这一遍</h2>
-      <p class="section-subtitle">四步走完，时序感、因果链、关键细节都不会漏。</p>
-    </header>
-
-    <div class="path-grid" id="path-grid">
       <!-- 由 home.js 注入 -->
     </div>
   </section>
@@ -241,16 +238,15 @@
   </p>
   <p style="margin:.5rem 0 0;">
     <a href="#timeline">时间轴总览</a> ·
-    <a href="#events">全部关键事件</a> ·
-    <a href="#path">学习路径</a>
+    <a href="#events">全部关键事件</a>
   </p>
 </footer>
 
-<script src="assets/js/data.js"></script>
-<script src="assets/js/sound.js"></script>
-<script src="assets/js/home.js"></script>
-<script src="assets/js/site.js"></script>
-<script src="assets/js/cover.js"></script>
-<script src="assets/js/intro.js"></script>
+<script src="assets/js/data.js?v=20260923b"></script>
+<script src="assets/js/sound.js?v=20260923b"></script>
+<script src="assets/js/home.js?v=20260923b"></script>
+<script src="assets/js/site.js?v=20260923b"></script>
+<script src="assets/js/cover.js?v=20260923b"></script>
+<script src="assets/js/intro.js?v=20260923b"></script>
 </body>
 </html>

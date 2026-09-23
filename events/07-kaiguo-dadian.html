@@ -2,16 +2,19 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
+<!-- 构建号诊断标记：freshness.js 靠它判断「本页是不是旧副本」 -->
+<meta name="site-build" content="20260923b" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>开国大典 · 1949年10月1日 ｜ 有些历史不该忘</title>
 <meta name="description" content="1949年10月1日开国大典：天安门城楼上的庄严宣告，五星红旗第一次升起，中华人民共和国成立。" />
 <meta name="theme-color" content="#100B09" />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23EFE7D4'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23B33A1E' stroke-width='4'/%3E%3Ctext x='32' y='45' font-family='Songti SC,SimSun,serif' font-size='40' font-weight='700' fill='%23B33A1E' text-anchor='middle'%3E%E5%8F%B2%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="../assets/css/base.css" />
-<link rel="stylesheet" href="../assets/css/design.css" />
-<link rel="stylesheet" href="../assets/css/event-grand.css" />
-<link rel="stylesheet" href="../assets/css/mobile.css" />
+<link rel="stylesheet" href="../assets/css/base.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/design.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/event-grand.css?v=20260923b" />
+<link rel="stylesheet" href="../assets/css/mobile.css?v=20260923b" />
+<script src="../assets/js/freshness.js?v=20260923b" defer></script>
 </head>
 <body data-event="kaiguo">
 
@@ -25,13 +28,13 @@
 
   <!--
     满版背景 · 油画《开国大典》
-    用整幅油画替掉原来的天安门 SVG 与红旗升起动画：
-    画面本身已经把"在哪、谁在说话、下面是什么"交代完了，
-    不需要再用自绘建筑去重建一遍场景。
+    ⚠ 2026-09-22 第13轮：换成波哥提供的新油画（暖金黄昏 + 满场红旗与人群，
+    远比原来那张雾气暗调版更像"开国大典"）。旧图 h07-kaiguo-oath.webp 保留在库里，
+    要切回只需改这一行 src。
     油画下方叠一层自上而下的暗压，保证宣告文字压在画面亮部时依然可读。
   -->
   <div class="grand-bg" aria-hidden="true">
-    <img src="../assets/img/h07-kaiguo-oath.webp" width="1800" height="1200"
+    <img src="../assets/img/p07-kaiguo-grand.webp" width="1800" height="1200"
          alt="" loading="eager" decoding="async" fetchpriority="high" />
   </div>
   <div class="grand-bg-scrim" aria-hidden="true"></div>
@@ -51,30 +54,35 @@
       <span id="grand-voice-text"></span><i class="voice-caret" id="grand-caret" aria-hidden="true"></i>
     </p>
 
-    <!-- 原声出处与重听 -->
-    <div class="grand-voice-src">
-      <span class="grand-voice-src__label">历史录音 · 毛泽东</span>
-      <button class="grand-voice-src__btn" id="grand-voice-btn" type="button">
-        <span class="ico" aria-hidden="true"></span>再听一遍这句话
-      </button>
-      <span class="grand-voice-src__note" id="grand-voice-hint">
-        1949 年 10 月 1 日 · 开国大典实况录音
-      </span>
-    </div>
-
-    <!-- 落款 -->
-    <p class="grand-dateline" id="grand-dateline">1949 · 10 · 1 &nbsp;·&nbsp; 北京 天安门</p>
-
-    <!-- 控制条 -->
-    <div class="grand-controls">
-      <button class="grand-btn" id="grand-replay" type="button" aria-pressed="false">
-        <span class="ico" aria-hidden="true"></span>重播宣告 · 奏乐
-      </button>
-      <button class="grand-btn" id="grand-audio" type="button" aria-pressed="false">
-        <span class="ico" aria-hidden="true"></span><span id="grand-audio-label">开启声音</span>
-      </button>
+    <!--
+      ⚠ 2026-09-21 波哥要求精简首屏控件：
+      ① 删「历史录音 · 毛泽东」标签
+      ② 删「再听一遍这句话」大按钮
+      ③ 删「重播宣告 · 奏乐」与「声音已开启」两个按钮
+      保留：一句话本身 + 落款，以及右下角一个不抢戏的「重听」话筒图标。
+      话筒是纯图标按钮（无文字），静音/开启状态由 aria-pressed 与配色表达。
+    -->
+    <div class="grand-sign">
+      <p class="grand-dateline" id="grand-dateline">1949 · 10 · 1 &nbsp;·&nbsp; 北京 天安门</p>
+      <!--
+        配图说明（紧随落款一行，随落款一起浮现）
+        ⚠ 2026-09-22 第13轮二改：原「压画面的水印式图注」弃用 —— 实测打字跑完后
+        "那句话"排满两行横跨几乎整幅，底部那条从 390 到 1440 全被占满，贴不到画面最底角。
+        波哥定：放到「1949 · 10 · 1 · 北京 天安门」下面，随这段字一起出现，文案只留一行。
+      -->
+      <p class="grand-note" id="grand-note">配图参考 1950 年天安门城楼形制</p>
     </div>
   </div>
+
+  <!-- 右下角：重听那句话（纯图标，保持界面清爽） -->
+  <button class="grand-mic" id="grand-voice-btn" type="button"
+          aria-label="再听一遍这句话" aria-pressed="false" title="再听一遍这句话">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="9" y="2.5" width="6" height="11" rx="3"></rect>
+      <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"></path>
+      <line x1="12" y1="18" x2="12" y2="21.5"></line>
+    </svg>
+  </button>
 
   <!-- 滚动提示 -->
   <div class="grand-scroll-hint" id="grand-hint" aria-hidden="true">
@@ -154,15 +162,12 @@
       </div>
     </div>
 
-    <!-- 天安门城楼（历史照片） -->
-    <figure class="hist-fig hist-fig--wide">
-        <img src="../assets/img/h07-kaiguo-gate.webp" width="1500" height="1000" loading="lazy"
-             alt="1949 年 10 月 1 日开国大典：天安门城楼与观礼台，受阅部队与观礼群众齐聚广场" />
-      <figcaption>
-        1949 年 10 月 1 日 · 天安门城楼。城楼悬挂毛泽东画像，两侧标语为
-        「中华人民共和国万岁」「中央人民政府万岁」；此时国徽尚未确定（1950 年 6 月审定），故城楼上不设国徽。
-      </figcaption>
-    </figure>
+    <!--
+      ⚠ 2026-09-21 波哥要求删除：原「天安门城楼」通栏历史照片
+      （h07-kaiguo-gate.webp，.hist-fig--wide）。
+      该图的信息与上方「阅兵式 / 群众游行」两图和下方两张城楼特写重复，
+      通栏大图尺寸也不好控，整体删除，让版面更紧凑。
+    -->
 
     <!--
       城楼上的两张特写
@@ -213,11 +218,11 @@
   <p style="margin:.5rem 0 0;">引用自《义务教育历史课程标准（2022年版2025年修订）》</p>
 </footer>
 
-<script src="../assets/js/data.js"></script>
-<script src="../assets/js/sound.js"></script>
-<script src="../assets/js/site.js"></script>
-<script src="../assets/js/interact.js"></script>
-<script src="../assets/js/event-data-kaiguo.js"></script>
-<script src="../assets/js/grand.js"></script>
+<script src="../assets/js/data.js?v=20260923b"></script>
+<script src="../assets/js/sound.js?v=20260923b"></script>
+<script src="../assets/js/site.js?v=20260923b"></script>
+<script src="../assets/js/interact.js?v=20260923b"></script>
+<script src="../assets/js/event-data-kaiguo.js?v=20260923b"></script>
+<script src="../assets/js/grand.js?v=20260923b"></script>
 </body>
 </html>

@@ -209,14 +209,14 @@
 }
 .cover__start-text {
   font-family: var(--font-display);
-  font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+  font-size: clamp(0.95rem, 2.4vw, 1.125rem);
   font-weight: 700;
   letter-spacing: 0.3em;
   color: #F2EAD8;
 }
 .cover__start-hint {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.16em;
   color: rgba(239, 231, 212, 0.44);
 }
@@ -592,7 +592,7 @@
 
 .home-hero__sub {
   font-family: var(--font-display);
-  font-size: clamp(1rem, 2.6vw, 1.6rem);
+  font-size: clamp(1rem, 2.6vw, 1.625rem);
   font-weight: 700;
   letter-spacing: 0.3em;
   color: var(--primary);
@@ -643,6 +643,12 @@
   font-weight: 700;
   color: var(--primary);
   line-height: 1;
+}
+/* 量词后缀（"年" / "+"）：取自字号阶梯 15px，不再用 .55em 这类魔法比例 */
+.home-stats .stat__unit {
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 0.08em;
 }
 .home-stats .stat__label {
   font-size: 12px;
@@ -702,14 +708,35 @@
   position: relative;
   padding: 0 0 1.5rem;
 }
+/* ⚠ 2026-09-22 修正「圆点 hover 放大后被削平」：
+   量出来的根因 —— .axis__ticks 是 overflow-x: auto 的滚动容器，
+   按 CSS 规范一轴非 visible 时另一轴也会被裁剪（实测 overflow-y 计算值为 auto）。
+   而 .axis__dot 是 .axis__tick 的第一个子元素、容器上方没有留白，
+   hover 时 scale(1.35) 使 13px 圆点长到 17.55px，**顶部 2.28px 被裁掉** ——
+   视觉上就是圆点被削平、变成 D 形（2026-09-21 定位器圆点是同一类坑）。
+
+   解法：给滚动容器补 5px 上内边距（> 2.28 且留余量），圆点顶部即被包住；
+   圆点圆心随之下移 5px，轴线 top 同步由 6px 改为 11px，保持严格穿心。 */
 .axis__line {
   position: absolute;
   left: 0; right: 0;
-  top: 13px;
+  top: 11px;
   height: 1px;
   background: var(--line-strong);
 }
 
+/* 主轴：
+   ⚠ 2026-09-21 修"节点不在横轴中间"。
+   旧写法 flex: 1 0 auto + min-width: 150px，7 个节点最小内容宽 1050px
+   超过容器可视宽 1034px → 容器溢出，justify-content 的均分失效，
+   末位节点被右边缘压掉 16px，导致 7 个圆点整体左偏 8px、与上方三阶段色带对不齐。
+
+   现改为「两端对齐 + 首末节点各留半格」：
+   每个节点 flex: 1 1 0（等分且可收缩、min-width: 0 解除内容撑宽），
+   这样 7 个节点严格等宽铺满容器，圆点（align-items:center）落在各等分格中心，
+   首末中心到轴两端各留 (1/7)/2，天然左右对称。
+   节点内的文字用 max-width 限宽避免长标题把格子撑破。
+   窄屏改为可横滚的定宽节点，保证字够大。 */
 .axis__ticks {
   display: flex;
   justify-content: space-between;
@@ -719,22 +746,27 @@
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding-bottom: 0.5rem;
+  /* 顶部 5px 是给 hover 放大后的圆点留的净空 —— 少了它圆点会被这个滚动容器裁平，
+     见上方 .axis__line 的注释。改这个值必须同步改 .axis__line 的 top。 */
+  padding: 5px 0 0.5rem;
 }
 .axis__ticks::-webkit-scrollbar { display: none; }
 
 .axis__tick {
-  flex: 1 0 auto;
-  min-width: 150px;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0 0.5rem;
+  padding: 0;
   text-decoration: none;
 }
-@media (max-width: 900px) {
-  .axis__tick { min-width: 132px; }
+/* 长标题在格内换行，不撑破等分 */
+.axis__tick > * { max-width: 100%; }
+/* 窄屏：节点定宽 + 横滚，保证可读 */
+@media (max-width: 1100px) {
+  .axis__tick { flex: 1 0 auto; min-width: 132px; padding: 0 0.5rem; }
 }
 
 .axis__dot {
@@ -755,7 +787,7 @@
 
 .axis__date {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--primary);
   font-weight: 700;
@@ -763,7 +795,7 @@
 }
 .axis__name {
   font-family: var(--font-display);
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--ink);
   margin-top: 0.3rem;
@@ -816,7 +848,7 @@
 
 .stage-group__title {
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.8vw, 1.7rem);
+  font-size: clamp(1.25rem, 2.8vw, 1.625rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   margin: 0;
@@ -866,7 +898,9 @@
   background: var(--paper-deep);
   border-bottom: 1px solid var(--line);
 }
-.event-card__visual svg { width: 100%; height: 100%; display: block; }
+/* 封面图：图片自身即 16:9（1200×675），与容器比例一致 → cover 不裁切内容 */
+.event-card__visual img,
+.event-card__visual svg { width: 100%; height: 100%; display: block; object-fit: cover; }
 .event-card__visual::after {
   content: '';
   position: absolute;
@@ -896,21 +930,21 @@
 }
 .event-card__date {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   color: var(--primary);
   font-weight: 700;
 }
 .event-card__title {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--ink);
   margin: 0;
 }
 .event-card__excerpt {
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.75;
   color: var(--ink-muted);
   margin: 0;
@@ -918,7 +952,7 @@
 }
 .event-card__go {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   color: var(--primary);
   font-weight: 700;
@@ -952,7 +986,7 @@
 }
 .path-card__title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   margin: 0;
@@ -974,7 +1008,7 @@
 }
 .coda__text {
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  font-size: clamp(1.125rem, 3vw, 1.625rem);
   font-weight: 700;
   line-height: 1.85;
   letter-spacing: 0.06em;
@@ -982,7 +1016,7 @@
 }
 .coda__sig {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.2em;
   color: var(--primary);
   margin-top: 1.4rem;
